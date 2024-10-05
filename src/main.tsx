@@ -1,11 +1,25 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { PlayerRoute } from "./Player";
 import "./index.css";
 
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
-createRoot(document.getElementById("root")!).render(
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("bug: not found root element");
+}
+createRoot(container).render(
   <StrictMode>
     <App />
   </StrictMode>,
 );
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<PlayerRoute />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
