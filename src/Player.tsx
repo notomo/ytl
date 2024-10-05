@@ -64,7 +64,7 @@ function Player({
     script.type = "text/javascript";
     script.src = "https://www.youtube.com/iframe_api";
     script.async = true;
-    head.appendChild(script);
+    head?.appendChild(script);
     return () => {
       script.remove();
     };
