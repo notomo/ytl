@@ -1,9 +1,22 @@
 declare global {
   var YT: IframeApiType;
   var onYouTubeIframeAPIReady: () => void;
+  var onYoutubeStateChange: (event: {
+    data: PlayerState;
+    target: YouTubePlayer;
+  }) => void;
 }
 
 export interface YouTubePlayer {
+  loadVideoById({
+    videoId,
+    startSeconds,
+    endSeconds,
+  }: {
+    videoId: string;
+    startSeconds?: number;
+    endSeconds?: number;
+  }): void;
   cueVideoById({
     videoId,
     startSeconds,
@@ -15,6 +28,17 @@ export interface YouTubePlayer {
   }): void;
   seekTo(startSeconds: number, allowSeekAhead: boolean): void;
   playVideo(): void;
+  clearVideo(): void;
+  destroy(): void;
+  getDuration(): number;
+  addEventListener(
+    event: "onStateChange",
+    listener: (event: { target: YouTubePlayer }) => void,
+  ): void;
+  removeEventListener(
+    event: "onStateChange",
+    listener: (event: { target: YouTubePlayer }) => void,
+  ): void;
 }
 
 export interface IframeApiType {
@@ -24,8 +48,8 @@ export interface IframeApiType {
       options: {
         videoId: string;
         events: {
-          onReady: (event: { target: YouTubePlayer }) => void;
-          onStateChange: (event: {
+          onReady?: (event: { target: YouTubePlayer }) => void;
+          onStateChange?: (event: {
             data: PlayerState;
             target: YouTubePlayer;
           }) => void;
