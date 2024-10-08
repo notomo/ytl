@@ -3,18 +3,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RangeSlider } from "./RangeSlider";
+import { SecondsInput } from "./SecondsInput";
+import { getNumber } from "./parse";
 import { PlayerStates, type YouTubePlayer } from "./youtube";
-
-const getNumber = (v: string | null) => {
-  if (v === null) {
-    return undefined;
-  }
-  const n = Number(v);
-  if (Number.isNaN(n)) {
-    return undefined;
-  }
-  return n;
-};
 
 export function PlayerRoute() {
   const [searchParams] = useSearchParams();
@@ -45,13 +36,29 @@ export function PlayerRoute() {
             <Loader2 size={32} className="animate-spin" />
           </div>
         ) : (
-          <RangeSlider
-            startSeconds={startSeconds}
-            endSeconds={endSeconds}
-            duration={duration ?? 0}
-            setStartSeconds={setStartSeconds}
-            setEndSeconds={setEndSeconds}
-          />
+          <div className="flex flex-col gap-10">
+            <RangeSlider
+              startSeconds={startSeconds}
+              endSeconds={endSeconds}
+              duration={duration ?? 0}
+              setStartSeconds={setStartSeconds}
+              setEndSeconds={setEndSeconds}
+            />
+            <div className="flex justify-between">
+              <SecondsInput
+                defaultValue={startSeconds}
+                setSeconds={setStartSeconds}
+                min={0}
+                max={endSeconds || duration}
+              />
+              <SecondsInput
+                defaultValue={endSeconds ?? duration}
+                setSeconds={setEndSeconds}
+                min={startSeconds}
+                max={duration}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
