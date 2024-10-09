@@ -102,6 +102,7 @@ function Player({
         case PlayerStates.VIDEO_CUED: {
           setPlayer(event.target);
           setDuration(event.target.getDuration());
+          event.target.playVideo();
           break;
         }
       }
@@ -113,7 +114,6 @@ function Player({
         startSeconds,
         endSeconds,
       });
-      player.playVideo();
       return;
     }
 
@@ -127,7 +127,6 @@ function Player({
               startSeconds,
               endSeconds,
             });
-            event.target.playVideo();
           },
           onStateChange: (event) => {
             window.onYoutubeStateChange(event);
