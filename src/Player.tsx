@@ -8,7 +8,7 @@ import { getNumber } from "./parse";
 import { PlayerStates, type YouTubePlayer } from "./youtube";
 
 export function PlayerRoute() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const videoId = searchParams.get("v") ?? "M7lc1UVf-VE";
 
@@ -19,7 +19,15 @@ export function PlayerRoute() {
   const [endSeconds, setEndSeconds] = useState(end);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
-  const duration = player?.getDuration();
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    setSearchParams({
+      v: videoId,
+      start: startSeconds.toString(),
+      end: endSeconds?.toString() ?? "",
+    });
+  }, [videoId, startSeconds, endSeconds, setSearchParams]);
 
   return (
     <div className="h-screen w-screen grid grid-rows-[85%_15%] justify-center items-center">
@@ -29,9 +37,10 @@ export function PlayerRoute() {
         endSeconds={endSeconds}
         player={player}
         setPlayer={setPlayer}
+        setDuration={setDuration}
       />
       <div className="px-10">
-        {duration === undefined || duration === 0 ? (
+        {duration === 0 ? (
           <div className="flex w-full justify-center items-center">
             <Loader2 size={32} className="animate-spin" />
           </div>
@@ -73,12 +82,14 @@ function Player({
   endSeconds,
   player,
   setPlayer,
+  setDuration,
 }: {
   videoId: string;
   startSeconds: number;
   endSeconds?: number;
   player: YouTubePlayer | null;
   setPlayer: (player: YouTubePlayer | null) => void;
+  setDuration: (duration: number) => void;
 }) {
   useEffect(() => {
     window.onYoutubeStateChange = (event) => {
@@ -90,6 +101,7 @@ function Player({
         }
         case PlayerStates.VIDEO_CUED: {
           setPlayer(event.target);
+          setDuration(event.target.getDuration());
           break;
         }
       }
@@ -133,7 +145,7 @@ function Player({
     return () => {
       head?.removeChild(script);
     };
-  }, [videoId, startSeconds, endSeconds, player, setPlayer]);
+  }, [videoId, startSeconds, endSeconds, player, setPlayer, setDuration]);
 
   return <div id={playerId} className="h-full w-full aspect-video" />;
 }
