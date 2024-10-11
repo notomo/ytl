@@ -30,7 +30,7 @@ export function PlayerRoute() {
   }, [videoId, startSeconds, endSeconds, setSearchParams]);
 
   return (
-    <div className="h-screen w-screen grid grid-rows-[85%_15%] justify-center items-center">
+    <div className="h-svh w-svw grid grid-rows-[85%_15%] justify-center items-center">
       <Player
         videoId={videoId}
         startSeconds={startSeconds}
@@ -39,13 +39,13 @@ export function PlayerRoute() {
         setPlayer={setPlayer}
         setDuration={setDuration}
       />
-      <div className="px-10">
+      <div>
         {duration === 0 ? (
           <div className="flex w-full justify-center items-center">
             <Loader2 size={32} className="animate-spin" />
           </div>
         ) : (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-5">
             <RangeSlider
               startSeconds={startSeconds}
               endSeconds={endSeconds}
@@ -120,6 +120,11 @@ function Player({
     window.onYouTubeIframeAPIReady = () => {
       new window.YT.Player(playerId, {
         videoId,
+
+        // workaround for tablet
+        width: "1000",
+        height: "563",
+
         events: {
           onReady: (event) => {
             event.target.cueVideoById({
@@ -146,5 +151,10 @@ function Player({
     };
   }, [videoId, startSeconds, endSeconds, player, setPlayer, setDuration]);
 
-  return <div id={playerId} className="h-full w-full aspect-video" />;
+  return (
+    <div className="flex items-center w-full h-full aspect-video">
+      {/* xl is workaround for tablet */}
+      <div id={playerId} className="xl:w-full xl:h-full" />
+    </div>
+  );
 }

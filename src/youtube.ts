@@ -47,6 +47,8 @@ export interface IframeApiType {
       elementId: string,
       options: {
         videoId: string;
+        width?: string;
+        height?: string;
         events: {
           onReady?: (event: { target: YouTubePlayer }) => void;
           onStateChange?: (event: {
