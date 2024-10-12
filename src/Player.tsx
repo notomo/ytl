@@ -4,8 +4,11 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RangeSlider } from "./RangeSlider";
 import { SecondsInput } from "./SecondsInput";
+import { SeekButton } from "./SeekButton";
 import { getNumber } from "./parse";
 import { PlayerStates, type YouTubePlayer } from "./youtube";
+
+const frame = 1 / 30;
 
 export function PlayerRoute() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,32 +64,12 @@ export function PlayerRoute() {
                 max={endSeconds || duration}
               />
               <div className="flex items-center gap-5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!player) {
-                      return;
-                    }
-                    player.pauseVideo();
-                    const currentTime = player.getCurrentTime();
-                    player.seekTo(currentTime - 1 / 30, true);
-                  }}
-                >
+                <SeekButton player={player} seekOffset={-frame}>
                   <StepBack />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!player) {
-                      return;
-                    }
-                    player.pauseVideo();
-                    const currentTime = player.getCurrentTime();
-                    player.seekTo(currentTime + 1 / 30, true);
-                  }}
-                >
+                </SeekButton>
+                <SeekButton player={player} seekOffset={frame}>
                   <StepForward />
-                </button>
+                </SeekButton>
               </div>
               <SecondsInput
                 defaultValue={endSeconds ?? duration}
