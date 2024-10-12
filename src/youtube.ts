@@ -28,9 +28,11 @@ export interface YouTubePlayer {
   }): void;
   seekTo(startSeconds: number, allowSeekAhead: boolean): void;
   playVideo(): void;
+  pauseVideo(): void;
   clearVideo(): void;
   destroy(): void;
   getDuration(): number;
+  getCurrentTime(): number;
   addEventListener(
     event: "onStateChange",
     listener: (event: { target: YouTubePlayer }) => void,

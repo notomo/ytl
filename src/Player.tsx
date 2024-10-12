@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, StepBack, StepForward } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -53,13 +53,41 @@ export function PlayerRoute() {
               setStartSeconds={setStartSeconds}
               setEndSeconds={setEndSeconds}
             />
-            <div className="flex justify-between">
+            <div className="flex items-center justify-between">
               <SecondsInput
                 defaultValue={startSeconds}
                 setSeconds={setStartSeconds}
                 min={0}
                 max={endSeconds || duration}
               />
+              <div className="flex items-center gap-5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!player) {
+                      return;
+                    }
+                    player.pauseVideo();
+                    const currentTime = player.getCurrentTime();
+                    player.seekTo(currentTime - 1 / 30, true);
+                  }}
+                >
+                  <StepBack />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!player) {
+                      return;
+                    }
+                    player.pauseVideo();
+                    const currentTime = player.getCurrentTime();
+                    player.seekTo(currentTime + 1 / 30, true);
+                  }}
+                >
+                  <StepForward />
+                </button>
+              </div>
               <SecondsInput
                 defaultValue={endSeconds ?? duration}
                 setSeconds={setEndSeconds}
