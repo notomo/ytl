@@ -3,10 +3,12 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LoadingOr } from "~/component/loading";
+import { PlayPauseButton } from "~/component/play-pause-button";
 import { RangeSlider } from "~/component/range-slider";
 import { SecondsInput } from "~/component/seconds-input";
 import { SeekButton } from "~/component/seek-button";
 import {
+  type PlayerState,
   type YouTubePlayer,
   YoutubePlayerContainer,
   useYoutubePlayer,
@@ -32,7 +34,7 @@ export function PlayerRoute() {
     });
   }, [videoId, startSeconds, endSeconds, setSearchParams]);
 
-  const { player, duration } = useYoutubePlayer({
+  const { player, playerState, duration } = useYoutubePlayer({
     videoId,
     startSeconds,
     endSeconds,
@@ -44,6 +46,7 @@ export function PlayerRoute() {
       <LoadingOr isLoading={duration === 0}>
         <PlayerController
           player={player}
+          playerState={playerState}
           startSeconds={startSeconds}
           endSeconds={endSeconds}
           duration={duration ?? 0}
@@ -59,6 +62,7 @@ const frame = 1 / 30;
 
 function PlayerController({
   player,
+  playerState,
   startSeconds,
   endSeconds,
   duration,
@@ -66,6 +70,7 @@ function PlayerController({
   setEndSeconds,
 }: {
   player: YouTubePlayer | null;
+  playerState: PlayerState;
   startSeconds: number;
   endSeconds?: number;
   duration: number;
@@ -82,7 +87,7 @@ function PlayerController({
         setEndSeconds={setEndSeconds}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center gap-5">
         <SecondsInput
           defaultValue={startSeconds}
           setSeconds={setStartSeconds}
@@ -90,15 +95,15 @@ function PlayerController({
           max={endSeconds || duration}
         />
 
-        <div className="flex items-center gap-5">
-          <SeekButton player={player} seekOffset={-frame}>
-            <StepBack />
-          </SeekButton>
+        <SeekButton player={player} seekOffset={-frame}>
+          <StepBack />
+        </SeekButton>
 
-          <SeekButton player={player} seekOffset={frame}>
-            <StepForward />
-          </SeekButton>
-        </div>
+        <PlayPauseButton player={player} playerState={playerState} />
+
+        <SeekButton player={player} seekOffset={frame}>
+          <StepForward />
+        </SeekButton>
 
         <SecondsInput
           defaultValue={endSeconds ?? duration}

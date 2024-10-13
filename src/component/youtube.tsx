@@ -31,6 +31,7 @@ export interface YouTubePlayer {
   seekTo(startSeconds: number, allowSeekAhead: boolean): void;
   playVideo(): void;
   pauseVideo(): void;
+  getPlayerState(): PlayerState;
   clearVideo(): void;
   destroy(): void;
   getDuration(): number;
@@ -65,7 +66,7 @@ export interface IframeApiType {
   };
 }
 
-const PlayerStates = {
+export const PlayerStates = {
   UNSTARTED: -1,
   ENDED: 0,
   PLAYING: 1,
@@ -74,7 +75,7 @@ const PlayerStates = {
   VIDEO_CUED: 5,
 } as const;
 
-type PlayerState = (typeof PlayerStates)[keyof typeof PlayerStates];
+export type PlayerState = (typeof PlayerStates)[keyof typeof PlayerStates];
 
 const playerId = "player";
 
@@ -89,9 +90,14 @@ export function useYoutubePlayer({
 }) {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [duration, setDuration] = useState(0);
+  const [playerState, setPlayerState] = useState<PlayerState>(
+    PlayerStates.UNSTARTED,
+  );
 
   useEffect(() => {
     window.onYoutubeStateChange = (event) => {
+      setPlayerState(event.data);
+
       switch (event.data) {
         case PlayerStates.ENDED: {
           event.target.seekTo(startSeconds, true);
@@ -152,6 +158,7 @@ export function useYoutubePlayer({
 
   return {
     player,
+    playerState,
     duration,
   };
 }
