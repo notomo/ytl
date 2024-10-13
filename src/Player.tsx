@@ -1,14 +1,17 @@
-import { Loader2, StepBack, StepForward } from "lucide-react";
+import { StepBack, StepForward } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RangeSlider } from "./RangeSlider";
 import { SecondsInput } from "./SecondsInput";
 import { SeekButton } from "./SeekButton";
+import { LoadingOr } from "./loading";
 import { getNumber } from "./parse";
-import { YoutubePlayerContainer, useYoutubePlayer } from "./youtube";
-
-const frame = 1 / 30;
+import {
+  type YouTubePlayer,
+  YoutubePlayerContainer,
+  useYoutubePlayer,
+} from "./youtube";
 
 export function PlayerRoute() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,44 +41,71 @@ export function PlayerRoute() {
   return (
     <div className="h-svh w-svw grid grid-rows-[85%_15%] justify-center items-center">
       <YoutubePlayerContainer />
-      <div>
-        {duration === 0 ? (
-          <div className="flex w-full justify-center items-center">
-            <Loader2 size={32} className="animate-spin" />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-5">
-            <RangeSlider
-              startSeconds={startSeconds}
-              endSeconds={endSeconds}
-              duration={duration ?? 0}
-              setStartSeconds={setStartSeconds}
-              setEndSeconds={setEndSeconds}
-            />
-            <div className="flex items-center justify-between">
-              <SecondsInput
-                defaultValue={startSeconds}
-                setSeconds={setStartSeconds}
-                min={0}
-                max={endSeconds || duration}
-              />
-              <div className="flex items-center gap-5">
-                <SeekButton player={player} seekOffset={-frame}>
-                  <StepBack />
-                </SeekButton>
-                <SeekButton player={player} seekOffset={frame}>
-                  <StepForward />
-                </SeekButton>
-              </div>
-              <SecondsInput
-                defaultValue={endSeconds ?? duration}
-                setSeconds={setEndSeconds}
-                min={startSeconds}
-                max={duration}
-              />
-            </div>
-          </div>
-        )}
+      <LoadingOr isLoading={duration === 0}>
+        <PlayerController
+          player={player}
+          startSeconds={startSeconds}
+          endSeconds={endSeconds}
+          duration={duration ?? 0}
+          setStartSeconds={setStartSeconds}
+          setEndSeconds={setEndSeconds}
+        />
+      </LoadingOr>
+    </div>
+  );
+}
+
+const frame = 1 / 30;
+
+function PlayerController({
+  player,
+  startSeconds,
+  endSeconds,
+  duration,
+  setStartSeconds,
+  setEndSeconds,
+}: {
+  player: YouTubePlayer | null;
+  startSeconds: number;
+  endSeconds?: number;
+  duration: number;
+  setStartSeconds: (x: number) => void;
+  setEndSeconds: (x: number) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-5">
+      <RangeSlider
+        startSeconds={startSeconds}
+        endSeconds={endSeconds}
+        duration={duration ?? 0}
+        setStartSeconds={setStartSeconds}
+        setEndSeconds={setEndSeconds}
+      />
+
+      <div className="flex items-center justify-between">
+        <SecondsInput
+          defaultValue={startSeconds}
+          setSeconds={setStartSeconds}
+          min={0}
+          max={endSeconds || duration}
+        />
+
+        <div className="flex items-center gap-5">
+          <SeekButton player={player} seekOffset={-frame}>
+            <StepBack />
+          </SeekButton>
+
+          <SeekButton player={player} seekOffset={frame}>
+            <StepForward />
+          </SeekButton>
+        </div>
+
+        <SecondsInput
+          defaultValue={endSeconds ?? duration}
+          setSeconds={setEndSeconds}
+          min={startSeconds}
+          max={duration}
+        />
       </div>
     </div>
   );
