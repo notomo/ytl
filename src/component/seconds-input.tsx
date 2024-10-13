@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { useRef, useState } from "react";
-import { getNumber } from "./parse";
+import { getNumber } from "~/lib/parse";
 
 export function SecondsInput({
   defaultValue,

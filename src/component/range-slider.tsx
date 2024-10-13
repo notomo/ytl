@@ -1,6 +1,6 @@
 import { type Ranger, useRanger } from "@tanstack/react-ranger";
 import React from "react";
-import { cn } from "./tailwind";
+import { cn } from "~/lib/tailwind";
 
 export function RangeSlider({
   startSeconds,

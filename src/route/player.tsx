@@ -2,16 +2,16 @@ import { StepBack, StepForward } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { RangeSlider } from "./RangeSlider";
-import { SecondsInput } from "./SecondsInput";
-import { SeekButton } from "./SeekButton";
-import { LoadingOr } from "./loading";
-import { getNumber } from "./parse";
+import { LoadingOr } from "~/component/loading";
+import { RangeSlider } from "~/component/range-slider";
+import { SecondsInput } from "~/component/seconds-input";
+import { SeekButton } from "~/component/seek-button";
 import {
   type YouTubePlayer,
   YoutubePlayerContainer,
   useYoutubePlayer,
-} from "./youtube";
+} from "~/component/youtube";
+import { getNumber } from "~/lib/parse";
 
 export function PlayerRoute() {
   const [searchParams, setSearchParams] = useSearchParams();
