@@ -37,7 +37,7 @@ export function RangeSlider({
   return (
     <div
       ref={rangerRef}
-      className="relative h-4 bg-green-300 rounded-md select-none"
+      className="relative h-4 bg-green-700 rounded-md select-none"
     >
       {rangerInstance
         .handles()
@@ -66,7 +66,7 @@ export function RangeSlider({
                 left: `${rangerInstance.getPercentageForValue(value)}%`,
               }}
               className={cn(
-                "absolute h-12 w-12 rounded-full bg-green-300 border top-1/2 outline-none -translate-x-1/2 -translate-y-1/2",
+                "absolute h-12 w-12 rounded-full bg-green-700 border border-green-900 top-1/2 outline-none -translate-x-1/2 -translate-y-1/2",
                 {
                   "z-10": isActive,
                   "z-0": !isActive,

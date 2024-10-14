@@ -71,7 +71,7 @@ function EdittingSecondsInput({
       <button
         ref={button}
         type="button"
-        className="bg-green-50 rounded-full"
+        className="rounded-full"
         onClick={() => {
           const current = input.current;
           if (current === null) {
