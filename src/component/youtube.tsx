@@ -111,7 +111,7 @@ export function useYoutubePlayer({
 
           const videoUrl = new URL(event.target.getVideoUrl());
           const v = videoUrl.searchParams.get("v");
-          setVideoId(v || initialVideoId);
+          setVideoId(v || videoId);
 
           setPlayer(event.target);
           event.target.playVideo();
