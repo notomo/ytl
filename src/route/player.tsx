@@ -7,6 +7,7 @@ import { PlayPauseButton } from "~/component/play-pause-button";
 import { RangeSlider } from "~/component/range-slider";
 import { SecondsInput } from "~/component/seconds-input";
 import { SeekButton } from "~/component/seek-button";
+import { VideoUrlInput } from "~/component/video-url-input";
 import {
   type PlayerState,
   type YouTubePlayer,
@@ -18,13 +19,20 @@ import { getNumber } from "~/lib/parse";
 export function PlayerRoute() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const videoId = searchParams.get("v") ?? "M7lc1UVf-VE";
+  const initialVideoId = searchParams.get("v") ?? "M7lc1UVf-VE";
 
   const start = getNumber(searchParams.get("start")) || 0;
   const [startSeconds, setStartSeconds] = useState(start);
 
   const end = getNumber(searchParams.get("end"));
   const [endSeconds, setEndSeconds] = useState(end);
+
+  const { player, playerState, videoId, setVideoId, duration } =
+    useYoutubePlayer({
+      initialVideoId,
+      startSeconds,
+      endSeconds,
+    });
 
   useEffect(() => {
     setSearchParams({
@@ -34,12 +42,6 @@ export function PlayerRoute() {
     });
   }, [videoId, startSeconds, endSeconds, setSearchParams]);
 
-  const { player, playerState, duration } = useYoutubePlayer({
-    videoId,
-    startSeconds,
-    endSeconds,
-  });
-
   return (
     <div className="h-svh w-svw grid grid-rows-[85%_15%] justify-center items-center">
       <YoutubePlayerContainer />
@@ -47,6 +49,8 @@ export function PlayerRoute() {
         <PlayerController
           player={player}
           playerState={playerState}
+          videoId={videoId}
+          setVideoId={setVideoId}
           startSeconds={startSeconds}
           endSeconds={endSeconds}
           duration={duration ?? 0}
@@ -63,6 +67,8 @@ const frame = 1 / 30;
 function PlayerController({
   player,
   playerState,
+  videoId,
+  setVideoId,
   startSeconds,
   endSeconds,
   duration,
@@ -71,6 +77,8 @@ function PlayerController({
 }: {
   player: YouTubePlayer | null;
   playerState: PlayerState;
+  videoId: string;
+  setVideoId: (x: string) => void;
   startSeconds: number;
   endSeconds?: number;
   duration: number;
@@ -111,6 +119,8 @@ function PlayerController({
           min={startSeconds}
           max={duration}
         />
+
+        <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
       </div>
     </div>
   );

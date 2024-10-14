@@ -34,6 +34,7 @@ export interface YouTubePlayer {
   getPlayerState(): PlayerState;
   clearVideo(): void;
   destroy(): void;
+  getVideoUrl(): string;
   getDuration(): number;
   getCurrentTime(): number;
   addEventListener(
@@ -80,15 +81,16 @@ export type PlayerState = (typeof PlayerStates)[keyof typeof PlayerStates];
 const playerId = "player";
 
 export function useYoutubePlayer({
-  videoId,
+  initialVideoId,
   startSeconds,
   endSeconds,
 }: {
-  videoId: string;
+  initialVideoId: string;
   startSeconds: number;
   endSeconds?: number;
 }) {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [videoId, setVideoId] = useState(initialVideoId);
   const [duration, setDuration] = useState(0);
   const [playerState, setPlayerState] = useState<PlayerState>(
     PlayerStates.UNSTARTED,
@@ -106,6 +108,11 @@ export function useYoutubePlayer({
         }
         case PlayerStates.VIDEO_CUED: {
           setDuration(event.target.getDuration());
+
+          const videoUrl = new URL(event.target.getVideoUrl());
+          const v = videoUrl.searchParams.get("v");
+          setVideoId(v || initialVideoId);
+
           setPlayer(event.target);
           event.target.playVideo();
           break;
@@ -159,6 +166,8 @@ export function useYoutubePlayer({
   return {
     player,
     playerState,
+    videoId,
+    setVideoId,
     duration,
   };
 }
