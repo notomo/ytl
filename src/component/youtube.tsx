@@ -7,6 +7,10 @@ declare global {
     data: PlayerState;
     target: YouTubePlayer;
   }) => void;
+  var onYoutubePlaybackRateChange: (event: {
+    data: number;
+    target: YouTubePlayer;
+  }) => void;
 }
 
 export interface YouTubePlayer {
@@ -36,6 +40,8 @@ export interface YouTubePlayer {
   destroy(): void;
   getVideoUrl(): string;
   getDuration(): number;
+  getAvailablePlaybackRates(): number[];
+  setPlaybackRate(suggestedRate: number): void;
   getCurrentTime(): number;
   addEventListener(
     event: "onStateChange",
@@ -59,6 +65,10 @@ export interface IframeApiType {
           onReady?: (event: { target: YouTubePlayer }) => void;
           onStateChange?: (event: {
             data: PlayerState;
+            target: YouTubePlayer;
+          }) => void;
+          onPlaybackRateChange?: (event: {
+            data: number;
             target: YouTubePlayer;
           }) => void;
         };
@@ -92,6 +102,10 @@ export function useYoutubePlayer({
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [videoId, setVideoId] = useState(initialVideoId);
   const [duration, setDuration] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState<number>(1);
+  const [availablePlaybackRates, setAvailablePlaybackRates] = useState<
+    number[]
+  >([1]);
   const [playerState, setPlayerState] = useState<PlayerState>(
     PlayerStates.UNSTARTED,
   );
@@ -107,6 +121,7 @@ export function useYoutubePlayer({
           break;
         }
         case PlayerStates.VIDEO_CUED: {
+          setAvailablePlaybackRates(event.target.getAvailablePlaybackRates());
           setDuration(event.target.getDuration());
 
           const videoUrl = new URL(event.target.getVideoUrl());
@@ -118,6 +133,10 @@ export function useYoutubePlayer({
           break;
         }
       }
+    };
+
+    window.onYoutubePlaybackRateChange = (event) => {
+      setPlaybackRate(event.data);
     };
 
     if (player !== null) {
@@ -148,6 +167,9 @@ export function useYoutubePlayer({
           onStateChange: (event) => {
             window.onYoutubeStateChange(event);
           },
+          onPlaybackRateChange: (event) => {
+            window.onYoutubePlaybackRateChange(event);
+          },
         },
       });
     };
@@ -169,6 +191,8 @@ export function useYoutubePlayer({
     videoId,
     setVideoId,
     duration,
+    playbackRate,
+    availablePlaybackRates,
   };
 }
 

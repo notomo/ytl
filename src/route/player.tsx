@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LoadingOr } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
+import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
 import { SecondsInput } from "~/component/seconds-input";
 import { SeekButton } from "~/component/seek-button";
@@ -27,12 +28,19 @@ export function PlayerRoute() {
   const end = getNumber(searchParams.get("end"));
   const [endSeconds, setEndSeconds] = useState(end);
 
-  const { player, playerState, videoId, setVideoId, duration } =
-    useYoutubePlayer({
-      initialVideoId,
-      startSeconds,
-      endSeconds,
-    });
+  const {
+    player,
+    playerState,
+    videoId,
+    setVideoId,
+    duration,
+    playbackRate,
+    availablePlaybackRates,
+  } = useYoutubePlayer({
+    initialVideoId,
+    startSeconds,
+    endSeconds,
+  });
 
   useEffect(() => {
     setSearchParams({
@@ -56,6 +64,8 @@ export function PlayerRoute() {
           duration={duration ?? 0}
           setStartSeconds={setStartSeconds}
           setEndSeconds={setEndSeconds}
+          playbackRate={playbackRate}
+          availablePlaybackRates={availablePlaybackRates}
         />
       </LoadingOr>
     </div>
@@ -74,6 +84,8 @@ function PlayerController({
   duration,
   setStartSeconds,
   setEndSeconds,
+  playbackRate,
+  availablePlaybackRates,
 }: {
   player: YouTubePlayer | null;
   playerState: PlayerState;
@@ -84,6 +96,8 @@ function PlayerController({
   duration: number;
   setStartSeconds: (x: number) => void;
   setEndSeconds: (x: number) => void;
+  playbackRate: number;
+  availablePlaybackRates: number[];
 }) {
   return (
     <div className="flex flex-col gap-5">
@@ -121,6 +135,12 @@ function PlayerController({
         />
 
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
+
+        <PlaybackRateSlider
+          playbackRate={playbackRate}
+          availablePlaybackRates={availablePlaybackRates}
+          player={player}
+        />
       </div>
     </div>
   );
