@@ -5,17 +5,13 @@ export function SeekButton({
   seekOffset,
   children,
 }: React.PropsWithChildren<{
-  player: YouTubePlayer | null;
+  player: YouTubePlayer;
   seekOffset: number;
 }>) {
   return (
     <button
       type="button"
       onClick={() => {
-        if (!player) {
-          return;
-        }
-
         player.pauseVideo();
 
         const currentTime = player.getCurrentTime();

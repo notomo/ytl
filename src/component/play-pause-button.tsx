@@ -5,7 +5,7 @@ export function PlayPauseButton({
   player,
   playerState,
 }: {
-  player: YouTubePlayer | null;
+  player: YouTubePlayer;
   playerState: PlayerState;
 }) {
   const isPlaying = playerState === PlayerStates.PLAYING;
@@ -14,10 +14,6 @@ export function PlayPauseButton({
     <button
       type="button"
       onClick={() => {
-        if (!player) {
-          return;
-        }
-
         if (isPlaying) {
           player.pauseVideo();
           return;

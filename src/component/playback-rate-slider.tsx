@@ -5,7 +5,7 @@ export function PlaybackRateSlider({
   playbackRate,
   availablePlaybackRates,
 }: {
-  player: YouTubePlayer | null;
+  player: YouTubePlayer;
   playbackRate: number;
   availablePlaybackRates: number[];
 }) {
@@ -20,7 +20,7 @@ export function PlaybackRateSlider({
         step={0.25}
         defaultValue={playbackRate}
         onChange={(e) => {
-          player?.setPlaybackRate(Number(e.currentTarget.value));
+          player.setPlaybackRate(Number(e.currentTarget.value));
         }}
       />
       {playbackRate}
