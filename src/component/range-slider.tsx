@@ -37,8 +37,21 @@ export function RangeSlider({
   return (
     <div
       ref={rangerRef}
-      className="relative h-4 bg-green-700 rounded-md select-none"
+      className="relative h-4 bg-gray-700 rounded-md select-none"
     >
+      {rangerInstance
+        .getSteps()
+        .filter((_, i) => i === 1)
+        .map(({ left, width }) => (
+          <div
+            key="s"
+            className="absolute h-full bg-green-700"
+            style={{
+              width: `${width}%`,
+              left: `${left}%`,
+            }}
+          />
+        ))}
       {rangerInstance
         .handles()
         .map(
