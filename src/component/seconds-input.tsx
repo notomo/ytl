@@ -51,10 +51,10 @@ function EdittingSecondsInput({
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   return (
-    <div className="flex items-center gap-2 p-2">
+    <div className="flex items-center gap-2">
       <input
         ref={input}
-        className="border border-gray-500 text-center"
+        className="border border-gray-500 text-center p-2"
         type="number"
         defaultValue={defaultValue}
         min={min}

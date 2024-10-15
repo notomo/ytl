@@ -61,16 +61,17 @@ function PlayerController() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="grid grid-cols-3 gap-y-2">
       <RangeSlider
         startSeconds={startSeconds}
         endSeconds={endSeconds}
         duration={duration}
         setStartSeconds={setStartSeconds}
         setEndSeconds={setEndSeconds}
+        className="col-start-1 col-span-3"
       />
 
-      <div className="flex items-center justify-center gap-5">
+      <div className="col-start-2 col-span-1 justify-self-center flex gap-5">
         <SecondsInput
           defaultValue={startSeconds}
           setSeconds={setStartSeconds}
@@ -94,7 +95,9 @@ function PlayerController() {
           min={startSeconds}
           max={duration}
         />
+      </div>
 
+      <div className="col-span-1 justify-self-end flex items-center gap-2">
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
 
         <PlaybackRateSlider

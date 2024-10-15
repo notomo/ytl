@@ -23,7 +23,10 @@ export function PlaybackRateSlider({
           player.setPlaybackRate(Number(e.currentTarget.value));
         }}
       />
-      {playbackRate}
+      {playbackRate.toLocaleString("en-US", {
+        minimumIntegerDigits: 1,
+        minimumFractionDigits: 2,
+      })}
     </div>
   );
 }

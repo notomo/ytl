@@ -8,12 +8,14 @@ export function RangeSlider({
   duration,
   setStartSeconds,
   setEndSeconds,
+  className,
 }: {
   startSeconds: number;
   endSeconds?: number;
   duration: number;
   setStartSeconds: (s: number) => void;
   setEndSeconds: (s: number) => void;
+  className?: string;
 }) {
   const rangerRef = React.useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,10 @@ export function RangeSlider({
   return (
     <div
       ref={rangerRef}
-      className="relative h-4 bg-gray-700 rounded-md select-none"
+      className={cn(
+        "relative h-4 bg-gray-700 rounded-md select-none",
+        className,
+      )}
     >
       {rangerInstance
         .getSteps()

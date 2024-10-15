@@ -40,10 +40,10 @@ function EdittingVideoUrlInput({
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   return (
-    <div className="flex items-center gap-2 p-2">
+    <div className="flex items-center gap-2">
       <input
         ref={input}
-        className="border border-gray-500"
+        className="border border-gray-500 p-2"
         type="url"
         defaultValue={`https://www.youtube.com/watch?v=${videoId}`}
         onKeyDown={(e) => {
