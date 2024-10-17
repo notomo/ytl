@@ -1,3 +1,4 @@
+import * as Popover from "@radix-ui/react-popover";
 import { Check } from "lucide-react";
 import { useRef, useState } from "react";
 import { getNumber } from "~/lib/parse";
@@ -13,25 +14,31 @@ export function SecondsInput({
   max: number;
   setSeconds: (x: number) => void;
 }) {
-  const [editting, setEditting] = useState(false);
-  return editting ? (
-    <EdittingSecondsInput
-      defaultValue={defaultValue}
-      min={min}
-      max={max}
-      setSeconds={setSeconds}
-      setEditting={setEditting}
-    />
-  ) : (
-    <button
-      type="button"
-      className="border border-white p-2"
-      onClick={() => {
-        setEditting(true);
-      }}
-    >
-      {defaultValue}
-    </button>
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <button type="button" className="border border-white p-2">
+          {defaultValue}
+        </button>
+      </Popover.Trigger>
+
+      <Popover.Anchor />
+      <Popover.Portal>
+        <Popover.Content side="right">
+          <EdittingSecondsInput
+            defaultValue={defaultValue}
+            min={min}
+            max={max}
+            setSeconds={(x) => {
+              setOpen(false);
+              setSeconds(x);
+            }}
+          />
+          <Popover.Close />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
 
@@ -40,21 +47,19 @@ function EdittingSecondsInput({
   min,
   max,
   setSeconds,
-  setEditting,
 }: {
   defaultValue: number;
   min: number;
   max: number;
   setSeconds: (x: number) => void;
-  setEditting: (x: boolean) => void;
 }) {
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center rounded-md border border-gray-400">
       <input
         ref={input}
-        className="border border-gray-500 text-center p-2"
+        className="p-2 text-center outline-none"
         type="number"
         defaultValue={defaultValue}
         min={min}
@@ -71,13 +76,12 @@ function EdittingSecondsInput({
       <button
         ref={button}
         type="button"
-        className="rounded-full"
+        className="rounded-md bg-green-400 p-2"
         onClick={() => {
           const current = input.current;
           if (current === null) {
             return;
           }
-          setEditting(false);
           setSeconds(getNumber(current.value) ?? 0);
         }}
       >

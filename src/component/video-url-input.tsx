@@ -1,3 +1,4 @@
+import * as Popover from "@radix-ui/react-popover";
 import { Check } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -8,42 +9,46 @@ export function VideoUrlInput({
   videoId: string;
   setVideoId: (x: string) => void;
 }) {
-  const [editting, setEditting] = useState(false);
-  return editting ? (
-    <EdittingVideoUrlInput
-      videoId={videoId}
-      setVideoId={setVideoId}
-      setEditting={setEditting}
-    />
-  ) : (
-    <button
-      type="button"
-      className="border border-white p-2"
-      onClick={() => {
-        setEditting(true);
-      }}
-    >
-      {videoId}
-    </button>
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <button type="button" className="border border-white p-2">
+          {videoId}
+        </button>
+      </Popover.Trigger>
+
+      <Popover.Anchor />
+      <Popover.Portal>
+        <Popover.Content side="right">
+          <EdittingVideoUrlInput
+            videoId={videoId}
+            setVideoId={(x) => {
+              setOpen(false);
+              setVideoId(x);
+            }}
+          />
+          <Popover.Close />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
 
 function EdittingVideoUrlInput({
   videoId,
   setVideoId,
-  setEditting,
 }: {
   videoId: string;
   setVideoId: (x: string) => void;
-  setEditting: (x: boolean) => void;
 }) {
   const input = useRef<HTMLInputElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center rounded-md border border-gray-400">
       <input
         ref={input}
-        className="border border-gray-500 p-2"
+        className="p-2 text-center outline-none"
         type="url"
         defaultValue={`https://www.youtube.com/watch?v=${videoId}`}
         onKeyDown={(e) => {
@@ -57,7 +62,7 @@ function EdittingVideoUrlInput({
       <button
         ref={button}
         type="button"
-        className="rounded-full"
+        className="rounded-md bg-green-400 p-2"
         onClick={() => {
           const current = input.current;
           if (current === null) {
@@ -67,7 +72,6 @@ function EdittingVideoUrlInput({
           const url = new URL(current.value);
           const v = url.searchParams.get("v");
 
-          setEditting(false);
           setVideoId(v ?? videoId);
         }}
       >
