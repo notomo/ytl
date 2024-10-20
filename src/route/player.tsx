@@ -6,8 +6,8 @@ import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
-import { SecondsInput } from "~/component/seconds-input";
 import { SeekButton } from "~/component/seek-button";
+import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
 import { YoutubePlayerContainer, useYoutubePlayer } from "~/component/youtube";
 import { getNumber } from "~/lib/parse";
@@ -74,13 +74,8 @@ function PlayerController() {
         className="col-start-1 col-span-3"
       />
 
-      <div className="col-start-2 col-span-1 justify-self-center flex gap-5">
-        <SecondsInput
-          defaultValue={startSeconds}
-          setSeconds={setStartSeconds}
-          min={0}
-          max={endSeconds || duration}
-        />
+      <div className="col-start-2 col-span-1 justify-self-center flex items-center gap-5">
+        <TimeView seconds={startSeconds} />
 
         <SeekButton player={player} seekOffset={-frame}>
           <StepBack />
@@ -92,12 +87,7 @@ function PlayerController() {
           <StepForward />
         </SeekButton>
 
-        <SecondsInput
-          defaultValue={endSeconds ?? duration}
-          setSeconds={setEndSeconds}
-          min={startSeconds}
-          max={duration}
-        />
+        <TimeView seconds={endSeconds ?? duration} />
       </div>
 
       <div className="col-span-1 justify-self-end flex items-center gap-2">
