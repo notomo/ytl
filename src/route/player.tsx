@@ -49,12 +49,15 @@ function PlayerController() {
   });
 
   useEffect(() => {
+    if (duration === 0) {
+      return;
+    }
     setSearchParams({
       v: videoId,
       start: startSeconds.toString(),
-      end: endSeconds?.toString() ?? "",
+      end: endSeconds?.toString() ?? duration.toString(),
     });
-  }, [videoId, startSeconds, endSeconds, setSearchParams]);
+  }, [videoId, startSeconds, endSeconds, setSearchParams, duration]);
 
   if (duration === 0 || player === null) {
     return <Loading />;
