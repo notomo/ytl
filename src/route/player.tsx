@@ -64,7 +64,7 @@ function PlayerController() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-y-2">
+    <div className="grid grid-cols-3 gap-y-4">
       <RangeSlider
         startSeconds={startSeconds}
         endSeconds={endSeconds}
@@ -73,6 +73,10 @@ function PlayerController() {
         setEndSeconds={setEndSeconds}
         className="col-start-1 col-span-3"
       />
+
+      <div className="col-span-1">
+        <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
+      </div>
 
       <div className="col-start-2 col-span-1 justify-self-center flex items-center gap-5">
         <TimeView seconds={startSeconds} />
@@ -91,8 +95,6 @@ function PlayerController() {
       </div>
 
       <div className="col-span-1 justify-self-end flex items-center gap-2">
-        <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
-
         <PlaybackRateSlider
           playbackRate={playbackRate}
           availablePlaybackRates={availablePlaybackRates}

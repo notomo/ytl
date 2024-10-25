@@ -11,27 +11,30 @@ export function VideoUrlInput({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
-        <button type="button" className="border border-white p-2">
-          {videoId}
-        </button>
-      </Popover.Trigger>
+    <div className="w-fit">
+      <Popover.Root open={open} onOpenChange={setOpen} modal={true}>
+        <Popover.Anchor />
 
-      <Popover.Anchor />
-      <Popover.Portal>
-        <Popover.Content side="right">
-          <EdittingVideoUrlInput
-            videoId={videoId}
-            setVideoId={(x) => {
-              setOpen(false);
-              setVideoId(x);
-            }}
-          />
-          <Popover.Close />
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+        <Popover.Trigger asChild>
+          <button type="button" className="border border-white p-2">
+            {videoId}
+          </button>
+        </Popover.Trigger>
+
+        <Popover.Portal>
+          <Popover.Content side="right">
+            <EdittingVideoUrlInput
+              videoId={videoId}
+              setVideoId={(x) => {
+                setOpen(false);
+                setVideoId(x);
+              }}
+            />
+            <Popover.Close />
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
+    </div>
   );
 }
 
