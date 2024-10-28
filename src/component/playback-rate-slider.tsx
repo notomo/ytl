@@ -32,6 +32,12 @@ export function PlaybackRateSlider({
     },
   });
 
+  const mainPlaybackRates = new Set(
+    [availablePlaybackRates.at(0), 1, availablePlaybackRates.at(-1)].filter(
+      (x) => x !== undefined,
+    ),
+  );
+
   return (
     <div
       ref={rangerRef}
@@ -42,13 +48,16 @@ export function PlaybackRateSlider({
     >
       {rangerInstance.getTicks().map(({ value, key, percentage }) => (
         <div
+          className="absolute h-full -translate-x-1/2"
           key={key}
-          className="absolute h-full top-3 -translate-x-1/2"
           style={{
             left: `${percentage}%`,
           }}
         >
-          {value}
+          <div className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full" />
+          {mainPlaybackRates.has(value) ? (
+            <div className="absolute top-3">{value}</div>
+          ) : null}
         </div>
       ))}
       {rangerInstance
