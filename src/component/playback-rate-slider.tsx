@@ -42,21 +42,23 @@ export function PlaybackRateSlider({
     <div
       ref={rangerRef}
       className={cn(
-        "relative h-2 bg-gray-700 rounded-md select-none w-80",
+        "relative h-2 bg-gray-700 rounded-md select-none w-80 -translate-y-1/2",
         className,
       )}
     >
       {rangerInstance.getTicks().map(({ value, key, percentage }) => (
         <div
-          className="absolute h-full -translate-x-1/2"
+          className="absolute"
           key={key}
           style={{
             left: `${percentage}%`,
           }}
         >
-          <div className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full" />
+          <div className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full -translate-x-1/2" />
           {mainPlaybackRates.has(value) ? (
-            <div className="absolute top-3">{value}</div>
+            <div className="absolute -translate-x-1/2 translate-y-2/3">
+              {value}
+            </div>
           ) : null}
         </div>
       ))}
