@@ -54,7 +54,16 @@ export function PlaybackRateSlider({
             left: `${percentage}%`,
           }}
         >
-          <div className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full -translate-x-1/2" />
+          <button
+            type="button"
+            className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full -translate-x-1/2"
+            onKeyDown={() => {
+              player.setPlaybackRate(value);
+            }}
+            onMouseDown={() => {
+              player.setPlaybackRate(value);
+            }}
+          />
           {mainPlaybackRates.has(value) ? (
             <div className="absolute -translate-x-1/2 translate-y-2/3">
               {value}
