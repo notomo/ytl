@@ -1,3 +1,4 @@
+import { iconButtonStyle } from "~/component/button";
 import type { YouTubePlayer } from "./youtube";
 
 export function SeekButton({
@@ -11,6 +12,7 @@ export function SeekButton({
   return (
     <button
       type="button"
+      className={iconButtonStyle}
       onClick={() => {
         player.pauseVideo();
 

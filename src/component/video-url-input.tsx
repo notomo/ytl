@@ -1,6 +1,8 @@
 import * as Popover from "@radix-ui/react-popover";
 import { ClipboardPaste } from "lucide-react";
 import { useState } from "react";
+import { buttonStyle } from "~/component/button";
+import { cn } from "~/lib/tailwind";
 
 export function VideoUrlInput({
   videoId,
@@ -12,11 +14,11 @@ export function VideoUrlInput({
   const [open, setOpen] = useState(false);
   return (
     <div className="w-fit">
-      <Popover.Root open={open} onOpenChange={setOpen} modal={true}>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Anchor />
 
         <Popover.Trigger asChild>
-          <button type="button" className="border border-white p-2">
+          <button type="button" className={buttonStyle}>
             {videoId}
           </button>
         </Popover.Trigger>
@@ -48,7 +50,7 @@ function EdittingVideoUrlInput({
   return (
     <button
       type="button"
-      className="rounded-md p-2 flex items-center gap-2 bg-background border border-gray-500"
+      className={cn(buttonStyle, "flex items-center gap-2")}
       onClick={async () => {
         const value = await navigator.clipboard.readText();
         const url = new URL(value);
