@@ -92,17 +92,20 @@ const playerId = "player";
 
 export function useYoutubePlayer({
   initialVideoId,
+  playbackRate,
   startSeconds,
   endSeconds,
+  setPlaybackRate,
 }: {
   initialVideoId: string;
+  playbackRate: number;
   startSeconds: number;
   endSeconds?: number;
+  setPlaybackRate: (x: number) => void;
 }) {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [videoId, setVideoId] = useState(initialVideoId);
   const [duration, setDuration] = useState(0);
-  const [playbackRate, setPlaybackRate] = useState<number>(1);
   const [availablePlaybackRates, setAvailablePlaybackRates] = useState<
     number[]
   >([1]);
@@ -121,6 +124,7 @@ export function useYoutubePlayer({
           break;
         }
         case PlayerStates.VIDEO_CUED: {
+          event.target.setPlaybackRate(playbackRate);
           setAvailablePlaybackRates(event.target.getAvailablePlaybackRates());
           setDuration(event.target.getDuration());
 
@@ -183,7 +187,14 @@ export function useYoutubePlayer({
     return () => {
       head?.removeChild(script);
     };
-  }, [videoId, startSeconds, endSeconds, player]);
+  }, [
+    videoId,
+    startSeconds,
+    endSeconds,
+    player,
+    setPlaybackRate,
+    playbackRate,
+  ]);
 
   return {
     player,

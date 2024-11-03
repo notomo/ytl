@@ -34,18 +34,22 @@ function PlayerController() {
   const end = getNumber(searchParams.get("end"));
   const [endSeconds, setEndSeconds] = useState(end);
 
+  const rate = getNumber(searchParams.get("rate")) || 1;
+  const [playbackRate, setPlaybackRate] = useState(rate);
+
   const {
     player,
     playerState,
     videoId,
     setVideoId,
     duration,
-    playbackRate,
     availablePlaybackRates,
   } = useYoutubePlayer({
     initialVideoId,
+    playbackRate,
     startSeconds,
     endSeconds,
+    setPlaybackRate,
   });
 
   useEffect(() => {
@@ -56,8 +60,16 @@ function PlayerController() {
       v: videoId,
       start: startSeconds.toString(),
       end: endSeconds?.toString() ?? duration.toString(),
+      rate: playbackRate.toString(),
     });
-  }, [videoId, startSeconds, endSeconds, setSearchParams, duration]);
+  }, [
+    videoId,
+    startSeconds,
+    endSeconds,
+    setSearchParams,
+    duration,
+    playbackRate,
+  ]);
 
   if (duration === 0 || player === null) {
     return <Loading />;
