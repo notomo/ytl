@@ -1,4 +1,9 @@
-import { StepBack, StepForward } from "lucide-react";
+import {
+  ArrowLeftToLine,
+  ArrowRightToLine,
+  StepBack,
+  StepForward,
+} from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -7,6 +12,7 @@ import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
 import { SeekButton } from "~/component/seek-button";
+import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
 import { YoutubePlayerContainer, useYoutubePlayer } from "~/component/youtube";
@@ -93,6 +99,14 @@ function PlayerController() {
       <div className="col-start-2 col-span-1 justify-self-center flex items-center gap-5">
         <TimeView seconds={startSeconds} />
 
+        <SetRangeButton
+          player={player}
+          setSeconds={setStartSeconds}
+          title="Set current time as start seconds"
+        >
+          <ArrowLeftToLine />
+        </SetRangeButton>
+
         <SeekButton player={player} seekOffset={-frame}>
           <StepBack />
         </SeekButton>
@@ -102,6 +116,14 @@ function PlayerController() {
         <SeekButton player={player} seekOffset={frame}>
           <StepForward />
         </SeekButton>
+
+        <SetRangeButton
+          player={player}
+          setSeconds={setEndSeconds}
+          title="Set current time as end seconds"
+        >
+          <ArrowRightToLine />
+        </SetRangeButton>
 
         <TimeView seconds={endSeconds ?? duration} />
       </div>
