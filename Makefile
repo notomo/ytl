@@ -10,3 +10,6 @@ build:
 
 preview:
 	npx vite preview --open
+
+tunnel:
+	cloudflared tunnel --url localhost:5173
