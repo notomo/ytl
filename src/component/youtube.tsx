@@ -156,10 +156,6 @@ export function useYoutubePlayer({
       new window.YT.Player(playerId, {
         videoId,
 
-        // workaround for tablet
-        width: "1000",
-        height: "563",
-
         events: {
           onReady: (event) => {
             event.target.cueVideoById({
@@ -210,8 +206,7 @@ export function useYoutubePlayer({
 export function YoutubePlayerContainer() {
   return (
     <div className="flex items-center w-full h-full aspect-video">
-      {/* xl is workaround for tablet */}
-      <div id={playerId} className="xl:w-full xl:h-full" />
+      <div id={playerId} className="w-full h-full" />
     </div>
   );
 }
