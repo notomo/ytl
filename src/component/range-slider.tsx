@@ -1,6 +1,7 @@
 import { type Ranger, useRanger } from "@tanstack/react-ranger";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
+import type { YouTubePlayer } from "./youtube";
 
 export function RangeSlider({
   startSeconds,
@@ -8,6 +9,7 @@ export function RangeSlider({
   duration,
   setStartSeconds,
   setEndSeconds,
+  player,
   className,
 }: {
   startSeconds: number;
@@ -15,6 +17,7 @@ export function RangeSlider({
   duration: number;
   setStartSeconds: (s: number) => void;
   setEndSeconds: (s: number) => void;
+  player: YouTubePlayer;
   className?: string;
 }) {
   const rangerRef = React.useRef<HTMLDivElement>(null);
@@ -93,6 +96,37 @@ export function RangeSlider({
             />
           ),
         )}
+      <CurrentTimeIndicator player={player} duration={duration} />
     </div>
+  );
+}
+
+export function CurrentTimeIndicator({
+  duration,
+  player,
+}: {
+  duration: number;
+  player: YouTubePlayer;
+}) {
+  const [currentTime, setCurrentTIme] = useState(player.getCurrentTime());
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setCurrentTIme(player.getCurrentTime());
+      return () => {
+        clearInterval(timerId);
+      };
+    }, 1000);
+  }, [player]);
+
+  const percent = (currentTime / duration) * 100;
+
+  return (
+    <div
+      className="absolute w-1 h-full bg-green-300"
+      style={{
+        left: `${percent}%`,
+      }}
+    />
   );
 }

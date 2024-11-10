@@ -89,6 +89,7 @@ function PlayerController() {
         duration={duration}
         setStartSeconds={setStartSeconds}
         setEndSeconds={setEndSeconds}
+        player={player}
         className="col-start-1 col-span-3"
       />
 
