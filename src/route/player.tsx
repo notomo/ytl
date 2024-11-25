@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
