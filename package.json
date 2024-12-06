@@ -10,14 +10,14 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.0.0",
     "react-router": "^7.0.2",
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/react": "^18.3.13",
-    "@types/react-dom": "^18.3.1",
+    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
     "autoprefixer": "^10.4.20",
     "globals": "^15.13.0",
