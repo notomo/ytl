@@ -87,7 +87,7 @@ export function RangeSlider({
                 left: `${rangerInstance.getPercentageForValue(value)}%`,
               }}
               className={cn(
-                "absolute h-8 w-8 rounded-full bg-green-700 border border-green-900 top-1/2 outline-none -translate-x-1/2 -translate-y-1/2",
+                "absolute h-8 w-8 rounded-full bg-green-700 border border-green-900 top-1/2 outline-hidden -translate-x-1/2 -translate-y-1/2",
                 {
                   "z-10": isActive,
                   "z-0": !isActive,

@@ -20,3 +20,8 @@ updates:
     assignees:
       - "notomo"
     open-pull-requests-limit: 10
+    groups:
+      tailwindcss:
+        patterns:
+          - tailwindcss
+          - "@tailwindcss/*"
