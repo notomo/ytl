@@ -1,8 +1,4 @@
-export function TimeView({
-  seconds,
-}: {
-  seconds: number;
-}) {
+export function TimeView({ seconds }: { seconds: number }) {
   const hours = Math.floor(seconds / (60 * 60));
   const minutes = Math.floor((seconds - hours * 60 * 60) / 60);
   const restSeconds = seconds - minutes * 60 - hours * 60 * 60;
