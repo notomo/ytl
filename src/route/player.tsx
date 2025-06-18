@@ -4,8 +4,7 @@ import {
   StepBack,
   StepForward,
 } from "lucide-react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
@@ -15,7 +14,7 @@ import { SeekButton } from "~/component/seek-button";
 import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
-import { YoutubePlayerContainer, useYoutubePlayer } from "~/component/youtube";
+import { useYoutubePlayer, YoutubePlayerContainer } from "~/component/youtube";
 import { getNumber } from "~/lib/parse";
 
 export function PlayerRoute() {
