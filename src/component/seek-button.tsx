@@ -1,7 +1,8 @@
+import React from "react";
 import { iconButtonStyle } from "~/component/button";
 import type { YouTubePlayer } from "./youtube";
 
-export function SeekButton({
+export const SeekButton = React.memo(function SeekButton({
   player,
   seekOffset,
   children,
@@ -23,4 +24,4 @@ export function SeekButton({
       {children}
     </button>
   );
-}
+});

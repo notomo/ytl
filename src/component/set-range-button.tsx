@@ -1,7 +1,8 @@
+import React from "react";
 import { iconButtonStyle } from "~/component/button";
 import type { YouTubePlayer } from "./youtube";
 
-export function SetRangeButton({
+export const SetRangeButton = React.memo(function SetRangeButton({
   children,
   player,
   setSeconds,
@@ -24,4 +25,4 @@ export function SetRangeButton({
       {children}
     </button>
   );
-}
+});

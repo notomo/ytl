@@ -1,10 +1,10 @@
 import * as Popover from "@radix-ui/react-popover";
 import { ClipboardPaste } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { buttonStyle } from "~/component/button";
 import { cn } from "~/lib/tailwind";
 
-export function VideoUrlInput({
+export const VideoUrlInput = React.memo(function VideoUrlInput({
   videoId,
   setVideoId,
 }: {
@@ -38,7 +38,7 @@ export function VideoUrlInput({
       </Popover.Root>
     </div>
   );
-}
+});
 
 function EdittingVideoUrlInput({
   videoId,

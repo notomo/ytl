@@ -42,6 +42,10 @@ function PlayerController() {
   const rate = getNumber(searchParams.get("rate")) || 1;
   const [playbackRate, setPlaybackRate] = useState(rate);
 
+  const memoizedSetStartSeconds = useCallback(setStartSeconds, []);
+  const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
+  const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
+
   const {
     player,
     playerState,
@@ -54,7 +58,7 @@ function PlayerController() {
     playbackRate,
     startSeconds,
     endSeconds,
-    setPlaybackRate,
+    setPlaybackRate: memoizedSetPlaybackRate,
   });
 
   const updateSearchParams = useCallback(() => {
@@ -90,8 +94,8 @@ function PlayerController() {
         startSeconds={startSeconds}
         endSeconds={endSeconds}
         duration={duration}
-        setStartSeconds={setStartSeconds}
-        setEndSeconds={setEndSeconds}
+        setStartSeconds={memoizedSetStartSeconds}
+        setEndSeconds={memoizedSetEndSeconds}
         player={player}
         className="col-start-1 col-span-3"
       />
@@ -105,7 +109,7 @@ function PlayerController() {
 
         <SetRangeButton
           player={player}
-          setSeconds={setStartSeconds}
+          setSeconds={memoizedSetStartSeconds}
           title="Set current time as start seconds"
         >
           <ArrowLeftToLine />
@@ -123,7 +127,7 @@ function PlayerController() {
 
         <SetRangeButton
           player={player}
-          setSeconds={setEndSeconds}
+          setSeconds={memoizedSetEndSeconds}
           title="Set current time as end seconds"
         >
           <ArrowRightToLine />
