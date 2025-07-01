@@ -4,6 +4,9 @@ start:
 lint:
 	npx @biomejs/biome check
 
+format:
+	npx biome check --write --formatter-enabled=true --assist-enabled=true --unsafe
+
 build:
 	npx tsc -b
 	npx vite build

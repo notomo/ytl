@@ -33,9 +33,11 @@ export function PlaybackRateSlider({
   });
 
   const mainPlaybackRates = new Set(
-    [(availablePlaybackRates || []).at(0), 1, (availablePlaybackRates || []).at(-1)].filter(
-      (x) => x !== undefined,
-    ),
+    [
+      (availablePlaybackRates || []).at(0),
+      1,
+      (availablePlaybackRates || []).at(-1),
+    ].filter((x) => x !== undefined),
   );
 
   return (
