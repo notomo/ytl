@@ -39,6 +39,11 @@ export function RangeSlider({
     },
   });
 
+  const leftPercentage = rangerInstance.getPercentageForValue(startSeconds);
+  const rightPercentage = rangerInstance.getPercentageForValue(
+    endSeconds ?? duration,
+  );
+
   return (
     <div
       ref={rangerRef}
@@ -47,19 +52,14 @@ export function RangeSlider({
         className,
       )}
     >
-      {rangerInstance
-        .getSteps()
-        .filter((_, i) => i === 1)
-        .map(({ left, width }) => (
-          <div
-            key="s"
-            className="absolute h-full bg-green-700"
-            style={{
-              width: `${width}%`,
-              left: `${left}%`,
-            }}
-          />
-        ))}
+      <div
+        key="s"
+        className="absolute h-full bg-green-700"
+        style={{
+          width: `${rightPercentage - leftPercentage}%`,
+          left: `${leftPercentage}%`,
+        }}
+      />
       {rangerInstance
         .handles()
         .map(
