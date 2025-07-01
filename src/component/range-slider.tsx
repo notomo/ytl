@@ -1,6 +1,6 @@
-import { type Ranger, useRanger } from "@tanstack/react-ranger";
 import React, { useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
+import { type RangeInstance, useRange } from "./range";
 import type { YouTubePlayer } from "./youtube";
 
 export function RangeSlider({
@@ -22,13 +22,13 @@ export function RangeSlider({
 }) {
   const rangerRef = React.useRef<HTMLDivElement>(null);
 
-  const rangerInstance = useRanger<HTMLDivElement>({
+  const rangerInstance = useRange({
     getRangerElement: () => rangerRef.current,
     values: [startSeconds, endSeconds ?? duration],
     min: 0,
     max: duration,
     stepSize: 1,
-    onChange: (instance: Ranger<HTMLDivElement>) => {
+    onChange: (instance: RangeInstance) => {
       const [s, e] = instance.sortedValues;
       if (s !== undefined) {
         setStartSeconds(s);

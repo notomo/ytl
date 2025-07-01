@@ -1,6 +1,6 @@
-import { type Ranger, useRanger } from "@tanstack/react-ranger";
 import React from "react";
 import { cn } from "~/lib/tailwind";
+import { type RangeInstance, useRange } from "./range";
 import type { YouTubePlayer } from "./youtube";
 
 export function PlaybackRateSlider({
@@ -14,26 +14,26 @@ export function PlaybackRateSlider({
   availablePlaybackRates: number[];
   className?: string;
 }) {
-  const min = Math.min(...availablePlaybackRates);
-  const max = Math.max(...availablePlaybackRates);
+  const min = Math.min(...(availablePlaybackRates || []));
+  const max = Math.max(...(availablePlaybackRates || []));
 
   const rangerRef = React.useRef<HTMLDivElement>(null);
 
-  const rangerInstance = useRanger<HTMLDivElement>({
+  const rangerInstance = useRange({
     getRangerElement: () => rangerRef.current,
     values: [playbackRate],
     min,
     max,
     stepSize: 0.25,
-    ticks: availablePlaybackRates,
-    onChange: (instance: Ranger<HTMLDivElement>) => {
+    ticks: availablePlaybackRates || [],
+    onChange: (instance: RangeInstance) => {
       const [playbackRate] = instance.sortedValues;
       player.setPlaybackRate(playbackRate ?? 1);
     },
   });
 
   const mainPlaybackRates = new Set(
-    [availablePlaybackRates.at(0), 1, availablePlaybackRates.at(-1)].filter(
+    [(availablePlaybackRates || []).at(0), 1, (availablePlaybackRates || []).at(-1)].filter(
       (x) => x !== undefined,
     ),
   );
