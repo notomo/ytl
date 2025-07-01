@@ -14,15 +14,10 @@ export interface RangeTick {
   percentage: number;
 }
 
-export interface RangeStep {
-  left: number;
-  width: number;
-}
 
 export interface RangeInstance {
   handles: () => RangeHandle[];
   getTicks: () => RangeTick[];
-  getSteps: () => RangeStep[];
   getPercentageForValue: (value: number) => number;
   sortedValues: number[];
   options: {
@@ -81,7 +76,6 @@ export function useRange(options: UseRangeOptions): RangeInstance {
       const instance: RangeInstance = {
         handles: () => [],
         getTicks: () => [],
-        getSteps: () => [],
         getPercentageForValue,
         sortedValues: [...newValues].sort((a, b) => a - b),
         options: {
@@ -218,25 +212,6 @@ export function useRange(options: UseRangeOptions): RangeInstance {
     }));
   }, [options.ticks, getPercentageForValue]);
 
-  const getSteps = useCallback((): RangeStep[] => {
-    if (values.length < 2) return [];
-
-    const sortedValues = [...values].sort((a, b) => a - b);
-    const steps: RangeStep[] = [];
-
-    for (let i = 0; i < sortedValues.length - 1; i++) {
-      const leftValue = sortedValues[i] ?? 0;
-      const rightValue = sortedValues[i + 1] ?? 0;
-      const left = getPercentageForValue(leftValue);
-      const right = getPercentageForValue(rightValue);
-      steps.push({
-        left,
-        width: right - left,
-      });
-    }
-
-    return steps;
-  }, [values, getPercentageForValue]);
 
   useEffect(() => {
     if (JSON.stringify(values) !== JSON.stringify(options.values)) {
@@ -247,7 +222,6 @@ export function useRange(options: UseRangeOptions): RangeInstance {
   return {
     handles,
     getTicks,
-    getSteps,
     getPercentageForValue,
     sortedValues,
     options: {
