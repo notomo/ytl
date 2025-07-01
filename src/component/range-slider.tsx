@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
 import type { YouTubePlayer } from "./youtube";
 
-export function RangeSlider({
+export const RangeSlider = React.memo(function RangeSlider({
   startSeconds,
   endSeconds,
   duration,
@@ -22,13 +22,8 @@ export function RangeSlider({
 }) {
   const rangerRef = React.useRef<HTMLDivElement>(null);
 
-  const rangerInstance = useRange({
-    getRangerElement: () => rangerRef.current,
-    values: [startSeconds, endSeconds ?? duration],
-    min: 0,
-    max: duration,
-    stepSize: 1,
-    onChange: (instance: RangeInstance) => {
+  const onChange = useCallback(
+    (instance: RangeInstance) => {
       const [s, e] = instance.sortedValues;
       if (s !== undefined) {
         setStartSeconds(s);
@@ -37,11 +32,26 @@ export function RangeSlider({
         setEndSeconds(e);
       }
     },
+    [setStartSeconds, setEndSeconds],
+  );
+
+  const rangerInstance = useRange({
+    getRangerElement: () => rangerRef.current,
+    values: [startSeconds, endSeconds ?? duration],
+    min: 0,
+    max: duration,
+    stepSize: 1,
+    onChange,
   });
 
-  const leftPercentage = rangerInstance.getPercentageForValue(startSeconds);
-  const rightPercentage = rangerInstance.getPercentageForValue(
-    endSeconds ?? duration,
+  const leftPercentage = useMemo(
+    () => rangerInstance.getPercentageForValue(startSeconds),
+    [rangerInstance, startSeconds],
+  );
+
+  const rightPercentage = useMemo(
+    () => rangerInstance.getPercentageForValue(endSeconds ?? duration),
+    [rangerInstance, endSeconds, duration],
   );
 
   return (
@@ -99,27 +109,31 @@ export function RangeSlider({
       <CurrentTimeIndicator player={player} duration={duration} />
     </div>
   );
-}
+});
 
-export function CurrentTimeIndicator({
+export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
   duration,
   player,
 }: {
   duration: number;
   player: YouTubePlayer;
 }) {
-  const [currentTime, setCurrentTIme] = useState(player.getCurrentTime());
+  const [currentTime, setCurrentTime] = useState(() => player.getCurrentTime());
 
   useEffect(() => {
     const timerId = setInterval(() => {
-      setCurrentTIme(player.getCurrentTime());
-      return () => {
-        clearInterval(timerId);
-      };
+      setCurrentTime(player.getCurrentTime());
     }, 1000);
+
+    return () => {
+      clearInterval(timerId);
+    };
   }, [player]);
 
-  const percent = (currentTime / duration) * 100;
+  const percent = useMemo(
+    () => (currentTime / duration) * 100,
+    [currentTime, duration],
+  );
 
   return (
     <div
@@ -129,4 +143,4 @@ export function CurrentTimeIndicator({
       }}
     />
   );
-}
+});

@@ -1,7 +1,16 @@
-export function TimeView({ seconds }: { seconds: number }) {
-  const hours = Math.floor(seconds / (60 * 60));
-  const minutes = Math.floor((seconds - hours * 60 * 60) / 60);
-  const restSeconds = seconds - minutes * 60 - hours * 60 * 60;
-  const time = `${hours > 0 ? `${hours}:` : ""}${minutes.toString().padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+import React, { useMemo } from "react";
+
+export const TimeView = React.memo(function TimeView({
+  seconds,
+}: {
+  seconds: number;
+}) {
+  const time = useMemo(() => {
+    const hours = Math.floor(seconds / (60 * 60));
+    const minutes = Math.floor((seconds - hours * 60 * 60) / 60);
+    const restSeconds = seconds - minutes * 60 - hours * 60 * 60;
+    return `${hours > 0 ? `${hours}:` : ""}${minutes.toString().padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
+  }, [seconds]);
+
   return <div className="underline underline-offset-8">{time}</div>;
-}
+});

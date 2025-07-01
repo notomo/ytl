@@ -4,7 +4,7 @@ import {
   StepBack,
   StepForward,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
@@ -57,7 +57,7 @@ function PlayerController() {
     setPlaybackRate,
   });
 
-  useEffect(() => {
+  const updateSearchParams = useCallback(() => {
     if (duration === 0) {
       return;
     }
@@ -71,10 +71,14 @@ function PlayerController() {
     videoId,
     startSeconds,
     endSeconds,
-    setSearchParams,
     duration,
     playbackRate,
+    setSearchParams,
   ]);
+
+  useEffect(() => {
+    updateSearchParams();
+  }, [updateSearchParams]);
 
   if (duration === 0 || player === null) {
     return <Loading />;

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
 import type { YouTubePlayer } from "./youtube";
 
-export function PlaybackRateSlider({
+export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
   player,
   playbackRate,
   availablePlaybackRates,
@@ -14,10 +14,23 @@ export function PlaybackRateSlider({
   availablePlaybackRates: number[];
   className?: string;
 }) {
-  const min = Math.min(...(availablePlaybackRates || []));
-  const max = Math.max(...(availablePlaybackRates || []));
+  const { min, max } = useMemo(
+    () => ({
+      min: Math.min(...(availablePlaybackRates || [])),
+      max: Math.max(...(availablePlaybackRates || [])),
+    }),
+    [availablePlaybackRates],
+  );
 
   const rangerRef = React.useRef<HTMLDivElement>(null);
+
+  const onChange = useCallback(
+    (instance: RangeInstance) => {
+      const [playbackRate] = instance.sortedValues;
+      player.setPlaybackRate(playbackRate ?? 1);
+    },
+    [player],
+  );
 
   const rangerInstance = useRange({
     getRangerElement: () => rangerRef.current,
@@ -26,18 +39,19 @@ export function PlaybackRateSlider({
     max,
     stepSize: 0.25,
     ticks: availablePlaybackRates || [],
-    onChange: (instance: RangeInstance) => {
-      const [playbackRate] = instance.sortedValues;
-      player.setPlaybackRate(playbackRate ?? 1);
-    },
+    onChange,
   });
 
-  const mainPlaybackRates = new Set(
-    [
-      (availablePlaybackRates || []).at(0),
-      1,
-      (availablePlaybackRates || []).at(-1),
-    ].filter((x) => x !== undefined),
+  const mainPlaybackRates = useMemo(
+    () =>
+      new Set(
+        [
+          (availablePlaybackRates || []).at(0),
+          1,
+          (availablePlaybackRates || []).at(-1),
+        ].filter((x) => x !== undefined),
+      ),
+    [availablePlaybackRates],
   );
 
   return (
@@ -108,4 +122,4 @@ export function PlaybackRateSlider({
         )}
     </div>
   );
-}
+});
