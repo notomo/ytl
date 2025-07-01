@@ -14,7 +14,6 @@ export interface RangeTick {
   percentage: number;
 }
 
-
 export interface RangeInstance {
   handles: () => RangeHandle[];
   getTicks: () => RangeTick[];
@@ -211,7 +210,6 @@ export function useRange(options: UseRangeOptions): RangeInstance {
       percentage: getPercentageForValue(value),
     }));
   }, [options.ticks, getPercentageForValue]);
-
 
   useEffect(() => {
     if (JSON.stringify(values) !== JSON.stringify(options.values)) {
