@@ -14,7 +14,11 @@ import { SeekButton } from "~/component/seek-button";
 import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
-import { useYoutubePlayer, YoutubePlayerContainer } from "~/component/youtube";
+import {
+  PlayerStates,
+  useYoutubePlayer,
+  YoutubePlayerContainer,
+} from "~/component/youtube";
 import { getNumber } from "~/lib/parse";
 
 export function PlayerRoute() {
@@ -134,7 +138,7 @@ function PlayerController() {
         <PlayPauseButton
           playVideo={playVideo}
           pauseVideo={pauseVideo}
-          playerState={playerState}
+          isPaused={playerState === PlayerStates.PAUSED}
         />
         <SeekButton
           pauseVideo={pauseVideo}

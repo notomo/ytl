@@ -1,36 +1,32 @@
 import { Pause, Play } from "lucide-react";
 import React, { useCallback, useMemo } from "react";
 import { iconButtonStyle } from "~/component/button";
-import { type PlayerState, PlayerStates } from "./youtube";
 
 export const PlayPauseButton = React.memo(function PlayPauseButton({
   playVideo,
   pauseVideo,
-  playerState,
+  isPaused,
 }: {
   playVideo: () => void;
   pauseVideo: () => void;
-  playerState: PlayerState;
+  isPaused: boolean;
 }) {
-  const isPlaying = useMemo(
-    () => playerState === PlayerStates.PLAYING,
-    [playerState],
-  );
-
   const memoizedPauseIcon = useMemo(() => <Pause />, []);
   const memoizedPlayIcon = useMemo(() => <Play />, []);
 
   const handleClick = useCallback(() => {
-    if (isPlaying) {
+    if (!isPaused) {
       pauseVideo();
     } else {
       playVideo();
     }
-  }, [isPlaying, pauseVideo, playVideo]);
+  }, [isPaused, pauseVideo, playVideo]);
 
   return (
     <button type="button" className={iconButtonStyle} onClick={handleClick}>
-      {isPlaying ? memoizedPauseIcon : memoizedPlayIcon}
+      {!isPaused ? memoizedPauseIcon : memoizedPlayIcon}
     </button>
   );
 });
+
+PlayPauseButton.whyDidYouRender = true;
