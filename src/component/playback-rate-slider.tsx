@@ -1,15 +1,14 @@
 import React, { useCallback, useMemo } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
-import type { YouTubePlayer } from "./youtube";
 
 export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
-  player,
+  setPlaybackRate,
   playbackRate,
   availablePlaybackRates,
   className,
 }: {
-  player: YouTubePlayer;
+  setPlaybackRate: (rate: number) => void;
   playbackRate: number;
   availablePlaybackRates: number[];
   className?: string;
@@ -27,9 +26,9 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
   const onChange = useCallback(
     (instance: RangeInstance) => {
       const [playbackRate] = instance.sortedValues;
-      player.setPlaybackRate(playbackRate ?? 1);
+      setPlaybackRate(playbackRate ?? 1);
     },
-    [player],
+    [setPlaybackRate],
   );
 
   const rangerInstance = useRange({
@@ -74,10 +73,10 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
             type="button"
             className="absolute -top-0.5 bg-gray-600 h-3 w-3 rounded-full -translate-x-1/2"
             onKeyDown={() => {
-              player.setPlaybackRate(value);
+              setPlaybackRate(value);
             }}
             onMouseDown={() => {
-              player.setPlaybackRate(value);
+              setPlaybackRate(value);
             }}
           />
           {mainPlaybackRates.has(value) ? (

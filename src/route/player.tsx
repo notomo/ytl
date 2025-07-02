@@ -4,7 +4,7 @@ import {
   StepBack,
   StepForward,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
@@ -46,6 +46,11 @@ function PlayerController() {
   const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
   const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
 
+  const memoizedArrowLeftToLine = useMemo(() => <ArrowLeftToLine />, []);
+  const memoizedStepBack = useMemo(() => <StepBack />, []);
+  const memoizedStepForward = useMemo(() => <StepForward />, []);
+  const memoizedArrowRightToLine = useMemo(() => <ArrowRightToLine />, []);
+
   const {
     player,
     playerState,
@@ -53,6 +58,11 @@ function PlayerController() {
     setVideoId,
     duration,
     availablePlaybackRates,
+    playVideo,
+    pauseVideo,
+    getCurrentTime,
+    seekTo,
+    setPlaybackRate: setPlayerPlaybackRate,
   } = useYoutubePlayer({
     initialVideoId,
     playbackRate,
@@ -96,7 +106,7 @@ function PlayerController() {
         duration={duration}
         setStartSeconds={memoizedSetStartSeconds}
         setEndSeconds={memoizedSetEndSeconds}
-        player={player}
+        getCurrentTime={getCurrentTime}
         className="col-start-1 col-span-3"
       />
 
@@ -106,33 +116,41 @@ function PlayerController() {
 
       <div className="col-start-2 col-span-1 justify-self-center flex items-center gap-5">
         <TimeView seconds={startSeconds} />
-
         <SetRangeButton
-          player={player}
+          getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetStartSeconds}
           title="Set current time as start seconds"
         >
-          <ArrowLeftToLine />
+          {memoizedArrowLeftToLine}
         </SetRangeButton>
-
-        <SeekButton player={player} seekOffset={-frame}>
-          <StepBack />
+        <SeekButton
+          pauseVideo={pauseVideo}
+          getCurrentTime={getCurrentTime}
+          seekTo={seekTo}
+          seekOffset={-frame}
+        >
+          {memoizedStepBack}
         </SeekButton>
-
-        <PlayPauseButton player={player} playerState={playerState} />
-
-        <SeekButton player={player} seekOffset={frame}>
-          <StepForward />
+        <PlayPauseButton
+          playVideo={playVideo}
+          pauseVideo={pauseVideo}
+          playerState={playerState}
+        />
+        <SeekButton
+          pauseVideo={pauseVideo}
+          getCurrentTime={getCurrentTime}
+          seekTo={seekTo}
+          seekOffset={frame}
+        >
+          {memoizedStepForward}
         </SeekButton>
-
         <SetRangeButton
-          player={player}
+          getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetEndSeconds}
           title="Set current time as end seconds"
         >
-          <ArrowRightToLine />
+          {memoizedArrowRightToLine}
         </SetRangeButton>
-
         <TimeView seconds={endSeconds ?? duration} />
       </div>
 
@@ -140,7 +158,7 @@ function PlayerController() {
         <PlaybackRateSlider
           playbackRate={playbackRate}
           availablePlaybackRates={availablePlaybackRates}
-          player={player}
+          setPlaybackRate={setPlayerPlaybackRate}
         />
       </div>
     </div>

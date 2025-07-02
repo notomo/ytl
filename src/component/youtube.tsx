@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 declare global {
   var YT: IframeApiType;
@@ -103,7 +103,7 @@ export function useYoutubePlayer({
   endSeconds?: number;
   setPlaybackRate: (x: number) => void;
 }) {
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
   const [videoId, setVideoId] = useState(initialVideoId);
   const [duration, setDuration] = useState(0);
   const [availablePlaybackRates, setAvailablePlaybackRates] = useState<
@@ -132,7 +132,6 @@ export function useYoutubePlayer({
           const v = videoUrl.searchParams.get("v");
           setVideoId(v || videoId);
 
-          setPlayer(event.target);
           event.target.playVideo();
           break;
         }
@@ -143,8 +142,8 @@ export function useYoutubePlayer({
       setPlaybackRate(event.data);
     };
 
-    if (player !== null) {
-      player.cueVideoById({
+    if (playerRef.current !== null) {
+      playerRef.current.cueVideoById({
         videoId,
         startSeconds,
         endSeconds,
@@ -158,6 +157,7 @@ export function useYoutubePlayer({
 
         events: {
           onReady: (event) => {
+            playerRef.current = event.target;
             event.target.cueVideoById({
               videoId,
               startSeconds,
@@ -183,23 +183,41 @@ export function useYoutubePlayer({
     return () => {
       head?.removeChild(script);
     };
-  }, [
-    videoId,
-    startSeconds,
-    endSeconds,
-    player,
-    setPlaybackRate,
-    playbackRate,
-  ]);
+  }, [videoId, startSeconds, endSeconds, setPlaybackRate, playbackRate]);
+
+  const playVideo = useCallback(() => {
+    playerRef.current?.playVideo();
+  }, []);
+
+  const pauseVideo = useCallback(() => {
+    playerRef.current?.pauseVideo();
+  }, []);
+
+  const getCurrentTime = useCallback(() => {
+    return playerRef.current?.getCurrentTime() ?? 0;
+  }, []);
+
+  const seekTo = useCallback((seconds: number, allowSeekAhead: boolean) => {
+    playerRef.current?.seekTo(seconds, allowSeekAhead);
+  }, []);
+
+  const setPlayerPlaybackRate = useCallback((rate: number) => {
+    playerRef.current?.setPlaybackRate(rate);
+  }, []);
 
   return {
-    player,
+    player: playerRef.current,
     playerState,
     videoId,
     setVideoId,
     duration,
     playbackRate,
     availablePlaybackRates,
+    playVideo,
+    pauseVideo,
+    getCurrentTime,
+    seekTo,
+    setPlaybackRate: setPlayerPlaybackRate,
   };
 }
 

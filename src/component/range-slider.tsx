@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
-import type { YouTubePlayer } from "./youtube";
 
 export const RangeSlider = React.memo(function RangeSlider({
   startSeconds,
@@ -9,7 +8,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   duration,
   setStartSeconds,
   setEndSeconds,
-  player,
+  getCurrentTime,
   className,
 }: {
   startSeconds: number;
@@ -17,7 +16,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   duration: number;
   setStartSeconds: (s: number) => void;
   setEndSeconds: (s: number) => void;
-  player: YouTubePlayer;
+  getCurrentTime: () => number;
   className?: string;
 }) {
   const rangerRef = React.useRef<HTMLDivElement>(null);
@@ -106,29 +105,32 @@ export const RangeSlider = React.memo(function RangeSlider({
             />
           ),
         )}
-      <CurrentTimeIndicator player={player} duration={duration} />
+      <CurrentTimeIndicator
+        getCurrentTime={getCurrentTime}
+        duration={duration}
+      />
     </div>
   );
 });
 
 export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
   duration,
-  player,
+  getCurrentTime,
 }: {
   duration: number;
-  player: YouTubePlayer;
+  getCurrentTime: () => number;
 }) {
-  const [currentTime, setCurrentTime] = useState(() => player.getCurrentTime());
+  const [currentTime, setCurrentTime] = useState(() => getCurrentTime());
 
   useEffect(() => {
     const timerId = setInterval(() => {
-      setCurrentTime(player.getCurrentTime());
+      setCurrentTime(getCurrentTime());
     }, 1000);
 
     return () => {
       clearInterval(timerId);
     };
-  }, [player]);
+  }, [getCurrentTime]);
 
   const percent = useMemo(
     () => (currentTime / duration) * 100,

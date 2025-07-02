@@ -1,13 +1,16 @@
 import React from "react";
 import { iconButtonStyle } from "~/component/button";
-import type { YouTubePlayer } from "./youtube";
 
 export const SeekButton = React.memo(function SeekButton({
-  player,
+  pauseVideo,
+  getCurrentTime,
+  seekTo,
   seekOffset,
   children,
 }: React.PropsWithChildren<{
-  player: YouTubePlayer;
+  pauseVideo: () => void;
+  getCurrentTime: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   seekOffset: number;
 }>) {
   return (
@@ -15,10 +18,10 @@ export const SeekButton = React.memo(function SeekButton({
       type="button"
       className={iconButtonStyle}
       onClick={() => {
-        player.pauseVideo();
+        pauseVideo();
 
-        const currentTime = player.getCurrentTime();
-        player.seekTo(currentTime + seekOffset, true);
+        const currentTime = getCurrentTime();
+        seekTo(currentTime + seekOffset, true);
       }}
     >
       {children}

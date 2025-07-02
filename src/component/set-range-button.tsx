@@ -1,14 +1,13 @@
 import React from "react";
 import { iconButtonStyle } from "~/component/button";
-import type { YouTubePlayer } from "./youtube";
 
 export const SetRangeButton = React.memo(function SetRangeButton({
   children,
-  player,
+  getCurrentTime,
   setSeconds,
   title,
 }: React.PropsWithChildren<{
-  player: YouTubePlayer;
+  getCurrentTime: () => number;
   setSeconds: (x: number) => void;
   title: string;
 }>) {
@@ -18,7 +17,7 @@ export const SetRangeButton = React.memo(function SetRangeButton({
       className={iconButtonStyle}
       title={title}
       onClick={() => {
-        const currentTime = player.getCurrentTime();
+        const currentTime = getCurrentTime();
         setSeconds(Math.floor(currentTime));
       }}
     >
