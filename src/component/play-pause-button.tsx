@@ -28,5 +28,3 @@ export const PlayPauseButton = React.memo(function PlayPauseButton({
     </button>
   );
 });
-
-PlayPauseButton.whyDidYouRender = true;
