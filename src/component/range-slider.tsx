@@ -57,7 +57,7 @@ export const RangeSlider = React.memo(function RangeSlider({
     <div
       ref={rangerRef}
       className={cn(
-        "relative h-4 bg-gray-700 rounded-md select-none",
+        "relative h-4 select-none rounded-md bg-gray-700",
         className,
       )}
     >
@@ -96,7 +96,7 @@ export const RangeSlider = React.memo(function RangeSlider({
                 left: `${rangerInstance.getPercentageForValue(value)}%`,
               }}
               className={cn(
-                "absolute h-8 w-8 rounded-full bg-green-700 border border-green-900 top-1/2 outline-hidden -translate-x-1/2 -translate-y-1/2",
+                "-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-8 w-8 rounded-full border border-green-900 bg-green-700 outline-hidden",
                 {
                   "z-10": isActive,
                   "z-0": !isActive,
@@ -139,7 +139,7 @@ export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
 
   return (
     <div
-      className="absolute w-1 h-full bg-green-300"
+      className="absolute h-full w-1 bg-green-300"
       style={{
         left: `${percent}%`,
       }}

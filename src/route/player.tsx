@@ -23,7 +23,7 @@ import { getNumber } from "~/lib/parse";
 
 export function PlayerRoute() {
   return (
-    <div className="h-svh w-svw grid grid-rows-[85%_15%] justify-center items-center">
+    <div className="grid h-svh w-svw grid-rows-[85%_15%] items-center justify-center">
       <YoutubePlayerContainer />
       <PlayerController />
     </div>
@@ -111,14 +111,14 @@ function PlayerController() {
         setStartSeconds={memoizedSetStartSeconds}
         setEndSeconds={memoizedSetEndSeconds}
         getCurrentTime={getCurrentTime}
-        className="col-start-1 col-span-3"
+        className="col-span-3 col-start-1"
       />
 
       <div className="col-span-1">
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
       </div>
 
-      <div className="col-start-2 col-span-1 justify-self-center flex items-center gap-5">
+      <div className="col-span-1 col-start-2 flex items-center gap-5 justify-self-center">
         <TimeView seconds={startSeconds} />
         <SetRangeButton
           getCurrentTime={getCurrentTime}
@@ -158,7 +158,7 @@ function PlayerController() {
         <TimeView seconds={endSeconds ?? duration} />
       </div>
 
-      <div className="col-span-1 justify-self-end flex items-center gap-2">
+      <div className="col-span-1 flex items-center gap-2 justify-self-end">
         <PlaybackRateSlider
           playbackRate={playbackRate}
           availablePlaybackRates={availablePlaybackRates}

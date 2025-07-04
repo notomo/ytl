@@ -223,8 +223,8 @@ export function useYoutubePlayer({
 
 export function YoutubePlayerContainer() {
   return (
-    <div className="flex items-center w-full h-full aspect-video">
-      <div id={playerId} className="w-full h-full" />
+    <div className="flex aspect-video h-full w-full items-center">
+      <div id={playerId} className="h-full w-full" />
     </div>
   );
 }
