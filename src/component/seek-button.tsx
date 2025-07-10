@@ -7,12 +7,13 @@ export const SeekButton = React.memo(function SeekButton({
   seekTo,
   seekOffset,
   children,
-}: React.PropsWithChildren<{
+}: {
+  children: React.ReactNode;
   pauseVideo: () => void;
   getCurrentTime: () => number;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   seekOffset: number;
-}>) {
+}) {
   return (
     <button
       type="button"

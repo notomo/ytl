@@ -6,11 +6,12 @@ export const SetRangeButton = React.memo(function SetRangeButton({
   getCurrentTime,
   setSeconds,
   title,
-}: React.PropsWithChildren<{
+}: {
+  children: React.ReactNode;
   getCurrentTime: () => number;
   setSeconds: (x: number) => void;
   title: string;
-}>) {
+}) {
   return (
     <button
       type="button"
