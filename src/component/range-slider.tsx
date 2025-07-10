@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
 
@@ -43,14 +43,10 @@ export const RangeSlider = React.memo(function RangeSlider({
     onChange,
   });
 
-  const leftPercentage = useMemo(
-    () => rangerInstance.getPercentageForValue(startSeconds),
-    [rangerInstance, startSeconds],
-  );
+  const leftPercentage = rangerInstance.getPercentageForValue(startSeconds);
 
-  const rightPercentage = useMemo(
-    () => rangerInstance.getPercentageForValue(endSeconds ?? duration),
-    [rangerInstance, endSeconds, duration],
+  const rightPercentage = rangerInstance.getPercentageForValue(
+    endSeconds ?? duration,
   );
 
   return (
@@ -132,10 +128,7 @@ export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
     };
   }, [getCurrentTime]);
 
-  const percent = useMemo(
-    () => (currentTime / duration) * 100,
-    [currentTime, duration],
-  );
+  const percent = (currentTime / duration) * 100;
 
   return (
     <div

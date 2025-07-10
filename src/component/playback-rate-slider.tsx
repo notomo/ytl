@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { cn } from "~/lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
 
@@ -13,13 +13,8 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
   availablePlaybackRates: number[];
   className?: string;
 }) {
-  const { min, max } = useMemo(
-    () => ({
-      min: Math.min(...(availablePlaybackRates || [])),
-      max: Math.max(...(availablePlaybackRates || [])),
-    }),
-    [availablePlaybackRates],
-  );
+  const min = Math.min(...(availablePlaybackRates || []));
+  const max = Math.max(...(availablePlaybackRates || []));
 
   const rangerRef = React.useRef<HTMLDivElement>(null);
 
@@ -41,16 +36,12 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
     onChange,
   });
 
-  const mainPlaybackRates = useMemo(
-    () =>
-      new Set(
-        [
-          (availablePlaybackRates || []).at(0),
-          1,
-          (availablePlaybackRates || []).at(-1),
-        ].filter((x) => x !== undefined),
-      ),
-    [availablePlaybackRates],
+  const mainPlaybackRates = new Set(
+    [
+      (availablePlaybackRates || []).at(0),
+      1,
+      (availablePlaybackRates || []).at(-1),
+    ].filter((x) => x !== undefined),
   );
 
   return (
