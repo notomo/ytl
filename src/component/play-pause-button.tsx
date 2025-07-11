@@ -11,8 +11,8 @@ export const PlayPauseButton = React.memo(function PlayPauseButton({
   pauseVideo: () => void;
   isPaused: boolean;
 }) {
-  const memoizedPauseIcon = useMemo(() => <Pause />, []);
-  const memoizedPlayIcon = useMemo(() => <Play />, []);
+  const pauseIcon = useMemo(() => <Pause />, []);
+  const playIcon = useMemo(() => <Play />, []);
 
   const handleClick = useCallback(() => {
     if (!isPaused) {
@@ -24,7 +24,7 @@ export const PlayPauseButton = React.memo(function PlayPauseButton({
 
   return (
     <button type="button" className={iconButtonStyle} onClick={handleClick}>
-      {!isPaused ? memoizedPauseIcon : memoizedPlayIcon}
+      {!isPaused ? pauseIcon : playIcon}
     </button>
   );
 });

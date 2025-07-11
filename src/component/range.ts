@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export interface RangeHandle {
+type RangeHandle = {
   value: number;
   onKeyDownHandler: (e: React.KeyboardEvent) => void;
   onMouseDownHandler: (e: React.MouseEvent) => void;
   onTouchStart: (e: React.TouchEvent) => void;
   isActive: boolean;
-}
+};
 
-export interface RangeTick {
+type RangeTick = {
   value: number;
   key: string;
   percentage: number;
-}
+};
 
-export interface RangeInstance {
+export type RangeInstance = {
   handles: () => RangeHandle[];
   getTicks: () => RangeTick[];
   getPercentageForValue: (value: number) => number;
@@ -24,9 +24,9 @@ export interface RangeInstance {
     max: number;
     stepSize: number;
   };
-}
+};
 
-export interface UseRangeOptions {
+type UseRangeOptions = {
   getRangerElement: () => HTMLElement | null;
   values: number[];
   min: number;
@@ -34,14 +34,14 @@ export interface UseRangeOptions {
   stepSize: number;
   ticks?: number[];
   onChange: (instance: RangeInstance) => void;
-}
+};
 
 export function useRange(options: UseRangeOptions): RangeInstance {
   const [values, setValues] = useState(options.values);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const isDragging = useRef(false);
-  const startDragValue = useRef<number>(0);
-  const startDragPosition = useRef<number>(0);
+  const startDragValue = useRef(0);
+  const startDragPosition = useRef(0);
 
   const sortedValues = [...values].sort((a, b) => a - b);
 
@@ -204,9 +204,9 @@ export function useRange(options: UseRangeOptions): RangeInstance {
 
   const getTicks = useCallback((): RangeTick[] => {
     const tickValues = options.ticks || [];
-    return tickValues.map((value, index) => ({
+    return tickValues.map((value) => ({
       value,
-      key: `tick-${index}`,
+      key: `tick-${value}`,
       percentage: getPercentageForValue(value),
     }));
   }, [options.ticks, getPercentageForValue]);

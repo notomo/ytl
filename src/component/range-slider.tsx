@@ -19,7 +19,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   getCurrentTime: () => number;
   className?: string;
 }) {
-  const rangerRef = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const onChange = useCallback(
     (instance: RangeInstance) => {
@@ -35,7 +35,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   );
 
   const rangerInstance = useRange({
-    getRangerElement: () => rangerRef.current,
+    getRangerElement: () => ref.current,
     values: [startSeconds, endSeconds ?? duration],
     min: 0,
     max: duration,
@@ -51,14 +51,13 @@ export const RangeSlider = React.memo(function RangeSlider({
 
   return (
     <div
-      ref={rangerRef}
+      ref={ref}
       className={cn(
         "relative h-4 select-none rounded-md bg-gray-700",
         className,
       )}
     >
       <div
-        key="s"
         className="absolute h-full bg-green-700"
         style={{
           width: `${rightPercentage - leftPercentage}%`,

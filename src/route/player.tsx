@@ -50,10 +50,10 @@ function PlayerController() {
   const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
   const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
 
-  const memoizedArrowLeftToLine = useMemo(() => <ArrowLeftToLine />, []);
-  const memoizedStepBack = useMemo(() => <StepBack />, []);
-  const memoizedStepForward = useMemo(() => <StepForward />, []);
-  const memoizedArrowRightToLine = useMemo(() => <ArrowRightToLine />, []);
+  const arrowLeftToLineIcon = useMemo(() => <ArrowLeftToLine />, []);
+  const stepBackIcon = useMemo(() => <StepBack />, []);
+  const stepForwardIcon = useMemo(() => <StepForward />, []);
+  const arrowRightToLineIcon = useMemo(() => <ArrowRightToLine />, []);
 
   const {
     player,
@@ -125,7 +125,7 @@ function PlayerController() {
           setSeconds={memoizedSetStartSeconds}
           title="Set current time as start seconds"
         >
-          {memoizedArrowLeftToLine}
+          {arrowLeftToLineIcon}
         </SetRangeButton>
         <SeekButton
           pauseVideo={pauseVideo}
@@ -133,7 +133,7 @@ function PlayerController() {
           seekTo={seekTo}
           seekOffset={-frame}
         >
-          {memoizedStepBack}
+          {stepBackIcon}
         </SeekButton>
         <PlayPauseButton
           playVideo={playVideo}
@@ -146,14 +146,14 @@ function PlayerController() {
           seekTo={seekTo}
           seekOffset={frame}
         >
-          {memoizedStepForward}
+          {stepForwardIcon}
         </SeekButton>
         <SetRangeButton
           getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetEndSeconds}
           title="Set current time as end seconds"
         >
-          {memoizedArrowRightToLine}
+          {arrowRightToLineIcon}
         </SetRangeButton>
         <TimeView seconds={endSeconds ?? duration} />
       </div>
