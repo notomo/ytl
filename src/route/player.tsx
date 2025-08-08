@@ -3,15 +3,13 @@ import {
   ArrowRightToLine,
   ChevronFirst,
   ChevronLast,
-  Minus,
-  Plus,
   StepBack,
   StepForward,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
-import { iconButtonStyle } from "~/component/button";
 import { Loading } from "~/component/loading";
+import { AddMarkButton, DeleteMarkButton } from "~/component/mark-button";
 import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
@@ -71,8 +69,6 @@ function PlayerController() {
   const arrowRightToLineIcon = useMemo(() => <ArrowRightToLine />, []);
   const chevronFirstIcon = useMemo(() => <ChevronFirst />, []);
   const chevronLastIcon = useMemo(() => <ChevronLast />, []);
-  const plusIcon = useMemo(() => <Plus />, []);
-  const minusIcon = useMemo(() => <Minus />, []);
 
   const {
     player,
@@ -140,40 +136,16 @@ function PlayerController() {
 
       <div className="col-span-1 flex items-center gap-2">
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
-        <button
-          type="button"
-          className={iconButtonStyle}
-          onClick={() => {
-            const currentTime = getCurrentTime();
-            if (!marksList.includes(currentTime)) {
-              const newMarks = [...marksList, currentTime].sort(
-                (a, b) => a - b,
-              );
-              setMarksList(newMarks);
-            }
-          }}
-          title="Add mark at current time"
-        >
-          {plusIcon}
-        </button>
-        <button
-          type="button"
-          className={iconButtonStyle}
-          onClick={() => {
-            const currentTime = getCurrentTime();
-            const previousMarks = marksList.filter(
-              (mark) => mark <= currentTime,
-            );
-            if (previousMarks.length > 0) {
-              const lastMark = Math.max(...previousMarks);
-              const newMarks = marksList.filter((mark) => mark !== lastMark);
-              setMarksList(newMarks);
-            }
-          }}
-          title="Remove previous mark"
-        >
-          {minusIcon}
-        </button>
+        <AddMarkButton
+          getCurrentTime={getCurrentTime}
+          marksList={marksList}
+          onAddMark={setMarksList}
+        />
+        <DeleteMarkButton
+          getCurrentTime={getCurrentTime}
+          marksList={marksList}
+          onDeleteMark={setMarksList}
+        />
       </div>
 
       <div className="col-span-1 col-start-2 flex items-center gap-5 justify-self-center">
