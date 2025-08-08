@@ -1,6 +1,8 @@
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
+  ChevronFirst,
+  ChevronLast,
   StepBack,
   StepForward,
 } from "lucide-react";
@@ -11,6 +13,7 @@ import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
 import { SeekButton } from "~/component/seek-button";
+import { SeekToPositionButton } from "~/component/seek-to-position-button";
 import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
@@ -54,6 +57,8 @@ function PlayerController() {
   const stepBackIcon = useMemo(() => <StepBack />, []);
   const stepForwardIcon = useMemo(() => <StepForward />, []);
   const arrowRightToLineIcon = useMemo(() => <ArrowRightToLine />, []);
+  const chevronFirstIcon = useMemo(() => <ChevronFirst />, []);
+  const chevronLastIcon = useMemo(() => <ChevronLast />, []);
 
   const {
     player,
@@ -127,6 +132,13 @@ function PlayerController() {
         >
           {arrowLeftToLineIcon}
         </SetRangeButton>
+        <SeekToPositionButton
+          pauseVideo={pauseVideo}
+          seekTo={seekTo}
+          targetSeconds={startSeconds}
+        >
+          {chevronFirstIcon}
+        </SeekToPositionButton>
         <SeekButton
           pauseVideo={pauseVideo}
           getCurrentTime={getCurrentTime}
@@ -148,6 +160,14 @@ function PlayerController() {
         >
           {stepForwardIcon}
         </SeekButton>
+        <SeekToPositionButton
+          pauseVideo={pauseVideo}
+          seekTo={seekTo}
+          // seek to just end seconds cause loop
+          targetSeconds={Math.max(0, (endSeconds ?? duration) - 16 * frame)}
+        >
+          {chevronLastIcon}
+        </SeekToPositionButton>
         <SetRangeButton
           getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetEndSeconds}
