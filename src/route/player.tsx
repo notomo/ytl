@@ -16,7 +16,10 @@ import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
 import { SeekButton } from "~/component/seek-button";
-import { SeekToNextButton, SeekToPreviousButton } from "~/component/seek-to-position-button";
+import {
+  SeekToNextButton,
+  SeekToPreviousButton,
+} from "~/component/seek-to-position-button";
 import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
@@ -130,6 +133,7 @@ function PlayerController() {
         setStartSeconds={memoizedSetStartSeconds}
         setEndSeconds={memoizedSetEndSeconds}
         getCurrentTime={getCurrentTime}
+        seekTo={seekTo}
         marks={marksList}
         className="col-span-3 col-start-1"
       />
@@ -142,7 +146,9 @@ function PlayerController() {
           onClick={() => {
             const currentTime = getCurrentTime();
             if (!marksList.includes(currentTime)) {
-              const newMarks = [...marksList, currentTime].sort((a, b) => a - b);
+              const newMarks = [...marksList, currentTime].sort(
+                (a, b) => a - b,
+              );
               setMarksList(newMarks);
             }
           }}

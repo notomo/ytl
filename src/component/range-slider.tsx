@@ -9,6 +9,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   setStartSeconds,
   setEndSeconds,
   getCurrentTime,
+  seekTo,
   marks = [],
   className,
 }: {
@@ -18,6 +19,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   setStartSeconds: (s: number) => void;
   setEndSeconds: (s: number) => void;
   getCurrentTime: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   marks?: number[];
   className?: string;
 }) {
@@ -51,11 +53,42 @@ export const RangeSlider = React.memo(function RangeSlider({
     endSeconds ?? duration,
   );
 
+  const handleSliderClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "BUTTON") return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const percentage = ((e.clientX - rect.left) / rect.width) * 100;
+      const seconds = (percentage / 100) * duration;
+      const clampedSeconds = Math.max(0, Math.min(duration, seconds));
+
+      seekTo(clampedSeconds, true);
+    },
+    [duration, seekTo],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const currentTime = getCurrentTime();
+        seekTo(currentTime, true);
+      }
+    },
+    [getCurrentTime, seekTo],
+  );
+
   return (
+    // biome-ignore lint/a11y/useSemanticElements: TODO
     <div
       ref={ref}
+      onClick={handleSliderClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
       className={cn(
-        "relative h-4 select-none rounded-md bg-gray-700",
+        "relative h-4 cursor-pointer select-none rounded-md bg-gray-700",
         className,
       )}
     >

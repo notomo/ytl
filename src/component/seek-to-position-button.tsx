@@ -20,18 +20,13 @@ export const SeekToNextButton = React.memo(function SeekToNextButton({
     pauseVideo();
     const currentTime = getCurrentTime();
     const nextMarks = marks.filter((mark) => mark > currentTime);
-    const targetSeconds = nextMarks.length > 0 
-      ? Math.min(...nextMarks) 
-      : fallbackSeconds;
+    const targetSeconds =
+      nextMarks.length > 0 ? Math.min(...nextMarks) : fallbackSeconds;
     seekTo(targetSeconds, true);
   }, [pauseVideo, seekTo, getCurrentTime, marks, fallbackSeconds]);
 
   return (
-    <button
-      type="button"
-      className={iconButtonStyle}
-      onClick={onClick}
-    >
+    <button type="button" className={iconButtonStyle} onClick={onClick}>
       {children}
     </button>
   );
@@ -56,18 +51,13 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
     pauseVideo();
     const currentTime = getCurrentTime();
     const previousMarks = marks.filter((mark) => mark < currentTime);
-    const targetSeconds = previousMarks.length > 0 
-      ? Math.max(...previousMarks) 
-      : fallbackSeconds;
+    const targetSeconds =
+      previousMarks.length > 0 ? Math.max(...previousMarks) : fallbackSeconds;
     seekTo(targetSeconds, true);
   }, [pauseVideo, seekTo, getCurrentTime, marks, fallbackSeconds]);
 
   return (
-    <button
-      type="button"
-      className={iconButtonStyle}
-      onClick={onClick}
-    >
+    <button type="button" className={iconButtonStyle} onClick={onClick}>
       {children}
     </button>
   );
