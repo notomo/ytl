@@ -16,7 +16,7 @@ import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
 import { SeekButton } from "~/component/seek-button";
-import { SeekToPositionButton } from "~/component/seek-to-position-button";
+import { SeekToNextButton, SeekToPreviousButton } from "~/component/seek-to-position-button";
 import { SetRangeButton } from "~/component/set-range-button";
 import { TimeView } from "~/component/time-view";
 import { VideoUrlInput } from "~/component/video-url-input";
@@ -179,22 +179,15 @@ function PlayerController() {
         >
           {arrowLeftToLineIcon}
         </SetRangeButton>
-        <SeekToPositionButton
+        <SeekToPreviousButton
           pauseVideo={pauseVideo}
           seekTo={seekTo}
-          target={() => {
-            const currentTime = getCurrentTime();
-            const previousMarks = marksList.filter(
-              (mark) => mark < currentTime,
-            );
-            if (previousMarks.length > 0) {
-              return Math.max(...previousMarks);
-            }
-            return startSeconds;
-          }}
+          getCurrentTime={getCurrentTime}
+          marks={marksList}
+          fallbackSeconds={startSeconds}
         >
           {chevronFirstIcon}
-        </SeekToPositionButton>
+        </SeekToPreviousButton>
         <SeekButton
           pauseVideo={pauseVideo}
           getCurrentTime={getCurrentTime}
@@ -216,20 +209,15 @@ function PlayerController() {
         >
           {stepForwardIcon}
         </SeekButton>
-        <SeekToPositionButton
+        <SeekToNextButton
           pauseVideo={pauseVideo}
           seekTo={seekTo}
-          target={() => {
-            const currentTime = getCurrentTime();
-            const nextMarks = marksList.filter((mark) => mark > currentTime);
-            if (nextMarks.length > 0) {
-              return Math.min(...nextMarks);
-            }
-            return Math.max(0, (endSeconds ?? duration) - 16 * frame);
-          }}
+          getCurrentTime={getCurrentTime}
+          marks={marksList}
+          fallbackSeconds={Math.max(0, (endSeconds ?? duration) - 16 * frame)}
         >
           {chevronLastIcon}
-        </SeekToPositionButton>
+        </SeekToNextButton>
         <SetRangeButton
           getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetEndSeconds}
