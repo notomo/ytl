@@ -3,11 +3,14 @@ import {
   ArrowRightToLine,
   ChevronFirst,
   ChevronLast,
+  Minus,
+  Plus,
   StepBack,
   StepForward,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
+import { iconButtonStyle } from "~/component/button";
 import { Loading } from "~/component/loading";
 import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
@@ -49,6 +52,12 @@ function PlayerController() {
   const rate = getNumber(searchParams.get("rate")) || 1;
   const [playbackRate, setPlaybackRate] = useState(rate);
 
+  const marksParam = searchParams.get("marks");
+  const marks = (marksParam?.split(",") ?? [])
+    .map((m) => getNumber(m))
+    .filter((n) => !!n) as number[];
+  const [marksList, setMarksList] = useState(marks);
+
   const memoizedSetStartSeconds = useCallback(setStartSeconds, []);
   const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
   const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
@@ -59,6 +68,8 @@ function PlayerController() {
   const arrowRightToLineIcon = useMemo(() => <ArrowRightToLine />, []);
   const chevronFirstIcon = useMemo(() => <ChevronFirst />, []);
   const chevronLastIcon = useMemo(() => <ChevronLast />, []);
+  const plusIcon = useMemo(() => <Plus />, []);
+  const minusIcon = useMemo(() => <Minus />, []);
 
   const {
     player,
@@ -84,18 +95,21 @@ function PlayerController() {
     if (duration === 0) {
       return;
     }
-    setSearchParams({
+    const params: Record<string, string> = {
       v: videoId,
       start: startSeconds.toString(),
       end: endSeconds?.toString() ?? duration.toString(),
       rate: playbackRate.toString(),
-    });
+      marks: marksList.join(","),
+    };
+    setSearchParams(params);
   }, [
     videoId,
     startSeconds,
     endSeconds,
     duration,
     playbackRate,
+    marksList,
     setSearchParams,
   ]);
 
@@ -116,11 +130,44 @@ function PlayerController() {
         setStartSeconds={memoizedSetStartSeconds}
         setEndSeconds={memoizedSetEndSeconds}
         getCurrentTime={getCurrentTime}
+        marks={marksList}
         className="col-span-3 col-start-1"
       />
 
-      <div className="col-span-1">
+      <div className="col-span-1 flex items-center gap-2">
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
+        <button
+          type="button"
+          className={iconButtonStyle}
+          onClick={() => {
+            const currentTime = getCurrentTime();
+            if (!marksList.includes(currentTime)) {
+              const newMarks = [...marksList, currentTime].sort((a, b) => a - b);
+              setMarksList(newMarks);
+            }
+          }}
+          title="Add mark at current time"
+        >
+          {plusIcon}
+        </button>
+        <button
+          type="button"
+          className={iconButtonStyle}
+          onClick={() => {
+            const currentTime = getCurrentTime();
+            const previousMarks = marksList.filter(
+              (mark) => mark <= currentTime,
+            );
+            if (previousMarks.length > 0) {
+              const lastMark = Math.max(...previousMarks);
+              const newMarks = marksList.filter((mark) => mark !== lastMark);
+              setMarksList(newMarks);
+            }
+          }}
+          title="Remove previous mark"
+        >
+          {minusIcon}
+        </button>
       </div>
 
       <div className="col-span-1 col-start-2 flex items-center gap-5 justify-self-center">
@@ -135,7 +182,16 @@ function PlayerController() {
         <SeekToPositionButton
           pauseVideo={pauseVideo}
           seekTo={seekTo}
-          targetSeconds={startSeconds}
+          target={() => {
+            const currentTime = getCurrentTime();
+            const previousMarks = marksList.filter(
+              (mark) => mark < currentTime,
+            );
+            if (previousMarks.length > 0) {
+              return Math.max(...previousMarks);
+            }
+            return startSeconds;
+          }}
         >
           {chevronFirstIcon}
         </SeekToPositionButton>
@@ -163,8 +219,14 @@ function PlayerController() {
         <SeekToPositionButton
           pauseVideo={pauseVideo}
           seekTo={seekTo}
-          // seek to just end seconds cause loop
-          targetSeconds={Math.max(0, (endSeconds ?? duration) - 16 * frame)}
+          target={() => {
+            const currentTime = getCurrentTime();
+            const nextMarks = marksList.filter((mark) => mark > currentTime);
+            if (nextMarks.length > 0) {
+              return Math.min(...nextMarks);
+            }
+            return Math.max(0, (endSeconds ?? duration) - 16 * frame);
+          }}
         >
           {chevronLastIcon}
         </SeekToPositionButton>
