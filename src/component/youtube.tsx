@@ -112,6 +112,7 @@ export function useYoutubePlayer({
   const [playerState, setPlayerState] = useState<PlayerState>(
     PlayerStates.UNSTARTED,
   );
+  const savedTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     window.onYoutubeStateChange = (event) => {
@@ -131,6 +132,11 @@ export function useYoutubePlayer({
           const videoUrl = new URL(event.target.getVideoUrl());
           const v = videoUrl.searchParams.get("v");
           setVideoId(v || videoId);
+
+          if (savedTimeRef.current !== null) {
+            event.target.seekTo(savedTimeRef.current, true);
+            savedTimeRef.current = null;
+          }
 
           event.target.playVideo();
           break;
@@ -202,7 +208,11 @@ export function useYoutubePlayer({
   }, []);
 
   const setPlayerPlaybackRate = useCallback((rate: number) => {
-    playerRef.current?.setPlaybackRate(rate);
+    if (!playerRef.current) {
+      return;
+    }
+    savedTimeRef.current = playerRef.current.getCurrentTime();
+    playerRef.current.setPlaybackRate(rate);
   }, []);
 
   return {
