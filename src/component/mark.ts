@@ -1,17 +1,3 @@
-export function isActiveMark({
-  index,
-  markLoopIndex,
-}: {
-  mark: number;
-  index: number;
-  markLoopIndex: number | null;
-}): boolean {
-  if (markLoopIndex === null) {
-    return false;
-  }
-  return index === markLoopIndex || index === markLoopIndex + 1;
-}
-
 export function findMarkNearestBefore({
   marks,
   currentTime,

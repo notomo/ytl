@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
-import { isActiveMark } from "./mark";
 import { type RangeInstance, useRange } from "./range";
 
 export const RangeSlider = React.memo(function RangeSlider({
@@ -63,6 +62,35 @@ export const RangeSlider = React.memo(function RangeSlider({
     endSeconds ?? duration,
   );
 
+  const getMarkLoopRange = () => {
+    if (markLoopIndex === null || marks.length === 0) {
+      return null;
+    }
+    const sortedMarks = marks.toSorted((a, b) => a - b);
+    const loopStartMark = sortedMarks[markLoopIndex];
+    if (loopStartMark === undefined) {
+      return null;
+    }
+
+    const nextIndex = markLoopIndex + 1;
+    let loopEndTime: number;
+
+    if (nextIndex < sortedMarks.length) {
+      loopEndTime = sortedMarks[nextIndex] ?? endSeconds ?? duration;
+    } else {
+      loopEndTime = endSeconds ?? duration;
+    }
+
+    return {
+      start: loopStartMark,
+      end: loopEndTime,
+      startPercentage: rangerInstance.getPercentageForValue(loopStartMark),
+      endPercentage: rangerInstance.getPercentageForValue(loopEndTime),
+    };
+  };
+
+  const markLoopRange = getMarkLoopRange();
+
   const handleSliderClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const target = e.target as HTMLElement;
@@ -113,6 +141,15 @@ export const RangeSlider = React.memo(function RangeSlider({
           left: `${leftPercentage}%`,
         }}
       />
+      {markLoopRange && (
+        <div
+          className="absolute h-full bg-purple-600"
+          style={{
+            width: `${markLoopRange.endPercentage - markLoopRange.startPercentage}%`,
+            left: `${markLoopRange.startPercentage}%`,
+          }}
+        />
+      )}
       {rangerInstance
         .handles()
         .map(
@@ -157,15 +194,13 @@ export const RangeSlider = React.memo(function RangeSlider({
       />
       {marks
         .filter((mark) => mark >= effectiveMin && mark <= effectiveMax)
-        .map((mark, index) => {
-          const isActiveLoopMark = isActiveMark({ mark, index, markLoopIndex });
+        .map((mark) => {
           return (
             <div
               key={mark}
-              className={cn(
-                `-translate-y-1/2 absolute top-1/2 h-1/2 w-1`,
-                isActiveLoopMark ? "bg-purple-500" : "bg-red-500",
-              )}
+              className={
+                "-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-1/2 w-1 bg-red-500"
+              }
               style={{
                 left: `${rangerInstance.getPercentageForValue(mark)}%`,
               }}
@@ -212,7 +247,7 @@ export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
 
   return (
     <div
-      className="absolute h-full w-1 bg-green-300"
+      className="-translate-x-1/2 absolute h-full w-1 bg-green-300"
       style={{
         left: `${percent}%`,
       }}
