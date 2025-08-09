@@ -4,17 +4,17 @@ import { iconButtonStyle } from "./button";
 
 export const AddMarkButton = React.memo(function AddMarkButton({
   getCurrentTime,
-  marksList,
+  marks,
   onAddMark,
 }: {
   getCurrentTime: () => number;
-  marksList: number[];
+  marks: number[];
   onAddMark: (newMarks: number[]) => void;
 }) {
   const handleClick = () => {
     const currentTime = getCurrentTime();
-    if (!marksList.includes(currentTime)) {
-      const newMarks = [...marksList, currentTime].sort((a, b) => a - b);
+    if (!marks.includes(currentTime)) {
+      const newMarks = [...marks, currentTime].sort((a, b) => a - b);
       onAddMark(newMarks);
     }
   };
@@ -33,28 +33,28 @@ export const AddMarkButton = React.memo(function AddMarkButton({
 
 export const DeleteMarkButton = React.memo(function DeleteMarkButton({
   getCurrentTime,
-  marksList,
+  marks,
   onDeleteMark,
 }: {
   getCurrentTime: () => number;
-  marksList: number[];
+  marks: number[];
   onDeleteMark: (newMarks: number[]) => void;
 }) {
   const handleClick = () => {
     const currentTime = getCurrentTime();
-    const previousMarks = marksList.filter((mark) => mark <= currentTime);
+    const previousMarks = marks.filter((mark) => mark <= currentTime);
 
     if (previousMarks.length > 0) {
       const lastMark = Math.max(...previousMarks);
-      const newMarks = marksList.filter((mark) => mark !== lastMark);
+      const newMarks = marks.filter((mark) => mark !== lastMark);
       onDeleteMark(newMarks);
       return;
     }
 
-    const nextMarks = marksList.filter((mark) => mark > currentTime);
+    const nextMarks = marks.filter((mark) => mark > currentTime);
     if (nextMarks.length > 0) {
       const firstMark = Math.min(...nextMarks);
-      const newMarks = marksList.filter((mark) => mark !== firstMark);
+      const newMarks = marks.filter((mark) => mark !== firstMark);
       onDeleteMark(newMarks);
       return;
     }

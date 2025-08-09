@@ -1,39 +1,39 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function getLoopStartTime(
-  marksList: number[],
+  marks: number[],
   markLoopIndex?: number | null,
   defaultStart?: number,
 ): number {
-  if (markLoopIndex == null || marksList.length === 0) {
+  if (markLoopIndex == null || marks.length === 0) {
     return defaultStart ?? 0;
   }
 
-  const sortedMarks = [...marksList].sort((a, b) => a - b);
-  if (markLoopIndex < 0 || markLoopIndex >= sortedMarks.length) {
+  const sorted = marks.toSorted((a, b) => a - b);
+  if (markLoopIndex < 0 || markLoopIndex >= sorted.length) {
     return defaultStart ?? 0;
   }
 
-  return sortedMarks[markLoopIndex] ?? defaultStart ?? 0;
+  return sorted[markLoopIndex] ?? defaultStart ?? 0;
 }
 
 function getLoopEndTime(
-  marksList: number[],
+  marks: number[],
   markLoopIndex?: number | null,
   defaultEnd?: number,
 ): number {
-  if (markLoopIndex == null || marksList.length === 0) {
+  if (markLoopIndex == null || marks.length === 0) {
     return defaultEnd ?? 0;
   }
 
-  const sortedMarks = [...marksList].sort((a, b) => a - b);
-  if (markLoopIndex < 0 || markLoopIndex >= sortedMarks.length) {
+  const sorted = marks.toSorted((a, b) => a - b);
+  if (markLoopIndex < 0 || markLoopIndex >= sorted.length) {
     return defaultEnd ?? 0;
   }
 
-  const nextMarkIndex = markLoopIndex + 1;
-  if (nextMarkIndex < sortedMarks.length) {
-    return sortedMarks[nextMarkIndex] ?? defaultEnd ?? 0;
+  const nextIndex = markLoopIndex + 1;
+  if (nextIndex < sorted.length) {
+    return sorted[nextIndex] ?? defaultEnd ?? 0;
   }
 
   return defaultEnd ?? 0;
@@ -135,7 +135,7 @@ export function useYoutubePlayer({
   startSeconds,
   endSeconds,
   setPlaybackRate,
-  marksList = [],
+  marks = [],
   markLoopIndex,
 }: {
   initialVideoId: string;
@@ -143,7 +143,7 @@ export function useYoutubePlayer({
   startSeconds: number;
   endSeconds?: number;
   setPlaybackRate: (x: number) => void;
-  marksList?: number[];
+  marks?: number[];
   markLoopIndex?: number | null;
 }) {
   const playerRef = useRef<YouTubePlayer | null>(null);
@@ -157,7 +157,7 @@ export function useYoutubePlayer({
   );
   const savedTimeRef = useRef<number | null>(null);
   const lastMarkLoopIndexRef = useRef<number | null>(markLoopIndex);
-  const lastMarksListRef = useRef<number[]>(marksList);
+  const lastMarksListRef = useRef<number[]>(marks);
 
   useEffect(() => {
     window.onYoutubeStateChange = (event) => {
@@ -166,7 +166,7 @@ export function useYoutubePlayer({
       switch (event.data) {
         case PlayerStates.ENDED: {
           const loopStart = getLoopStartTime(
-            marksList,
+            marks,
             markLoopIndex,
             startSeconds,
           );
@@ -187,9 +187,9 @@ export function useYoutubePlayer({
           if (savedTimeRef.current !== null) {
             event.target.seekTo(savedTimeRef.current, true);
             savedTimeRef.current = null;
-          } else if (markLoopIndex != null && marksList.length > 0) {
+          } else if (markLoopIndex != null && marks.length > 0) {
             const loopStart = getLoopStartTime(
-              marksList,
+              marks,
               markLoopIndex,
               startSeconds,
             );
@@ -208,7 +208,7 @@ export function useYoutubePlayer({
 
     if (playerRef.current !== null) {
       const marksChanged =
-        JSON.stringify(lastMarksListRef.current) !== JSON.stringify(marksList);
+        JSON.stringify(lastMarksListRef.current) !== JSON.stringify(marks);
       const markLoopChanged = lastMarkLoopIndexRef.current !== markLoopIndex;
 
       if (markLoopChanged || marksChanged) {
@@ -216,12 +216,12 @@ export function useYoutubePlayer({
       }
 
       const loopStart =
-        markLoopIndex != null && marksList.length > 0
-          ? getLoopStartTime(marksList, markLoopIndex, startSeconds)
+        markLoopIndex != null && marks.length > 0
+          ? getLoopStartTime(marks, markLoopIndex, startSeconds)
           : startSeconds;
       const loopEnd =
-        markLoopIndex != null && marksList.length > 0
-          ? getLoopEndTime(marksList, markLoopIndex, endSeconds)
+        markLoopIndex != null && marks.length > 0
+          ? getLoopEndTime(marks, markLoopIndex, endSeconds)
           : endSeconds;
 
       playerRef.current.cueVideoById({
@@ -240,12 +240,12 @@ export function useYoutubePlayer({
           onReady: (event) => {
             playerRef.current = event.target;
             const loopStart =
-              markLoopIndex != null && marksList.length > 0
-                ? getLoopStartTime(marksList, markLoopIndex, startSeconds)
+              markLoopIndex != null && marks.length > 0
+                ? getLoopStartTime(marks, markLoopIndex, startSeconds)
                 : startSeconds;
             const loopEnd =
-              markLoopIndex != null && marksList.length > 0
-                ? getLoopEndTime(marksList, markLoopIndex, endSeconds)
+              markLoopIndex != null && marks.length > 0
+                ? getLoopEndTime(marks, markLoopIndex, endSeconds)
                 : endSeconds;
 
             event.target.cueVideoById({
@@ -279,14 +279,14 @@ export function useYoutubePlayer({
     endSeconds,
     setPlaybackRate,
     playbackRate,
-    marksList,
+    marks,
     markLoopIndex,
   ]);
 
   useEffect(() => {
     lastMarkLoopIndexRef.current = markLoopIndex;
-    lastMarksListRef.current = marksList;
-  }, [markLoopIndex, marksList]);
+    lastMarksListRef.current = marks;
+  }, [markLoopIndex, marks]);
 
   const playVideo = useCallback(() => {
     playerRef.current?.playVideo();

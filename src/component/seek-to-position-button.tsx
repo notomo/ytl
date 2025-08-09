@@ -1,3 +1,4 @@
+import { ChevronFirst, ChevronLast } from "lucide-react";
 import React, { useCallback } from "react";
 import { iconButtonStyle } from "~/component/button";
 
@@ -7,9 +8,7 @@ export const SeekToNextButton = React.memo(function SeekToNextButton({
   getCurrentTime,
   marks,
   fallbackSeconds,
-  children,
 }: {
-  children: React.ReactNode;
   pauseVideo: () => void;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   getCurrentTime: () => number;
@@ -27,7 +26,7 @@ export const SeekToNextButton = React.memo(function SeekToNextButton({
 
   return (
     <button type="button" className={iconButtonStyle} onClick={onClick}>
-      {children}
+      <ChevronFirst />
     </button>
   );
 });
@@ -38,9 +37,7 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
   getCurrentTime,
   marks,
   fallbackSeconds,
-  children,
 }: {
-  children: React.ReactNode;
   pauseVideo: () => void;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   getCurrentTime: () => number;
@@ -58,7 +55,7 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
 
   return (
     <button type="button" className={iconButtonStyle} onClick={onClick}>
-      {children}
+      <ChevronLast />
     </button>
   );
 });

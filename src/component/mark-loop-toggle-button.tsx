@@ -1,57 +1,58 @@
 import { RotateCcw } from "lucide-react";
 import React from "react";
+import { cn } from "~/lib/tailwind";
 import { iconButtonStyle } from "./button";
 
 export const MarkLoopToggleButton = React.memo(function MarkLoopToggleButton({
   markLoopIndex,
-  marksList,
+  marks,
   onToggleMarkLoop,
   getCurrentTime,
 }: {
-  markLoopIndex?: number | null;
-  marksList: number[];
+  markLoopIndex: number | null;
+  marks: number[];
   onToggleMarkLoop: (index: number | null) => void;
   getCurrentTime: () => number;
 }) {
-  const isMarkLoopEnabled =
-    markLoopIndex !== null && markLoopIndex !== undefined;
-
-  const findNearestPreviousMark = () => {
+  const findNearestBefore = () => {
     const currentTime = getCurrentTime();
-    const sortedMarks = [...marksList].sort((a, b) => a - b);
 
-    const marksBeforeCurrent = sortedMarks.filter(
-      (mark) => mark <= currentTime,
-    );
-    if (marksBeforeCurrent.length === 0) {
-      return 0;
+    const marksBefore = marks
+      .toSorted((a, b) => a - b)
+      .filter((mark) => mark <= currentTime);
+    if (marksBefore.length === 0) {
+      return null;
     }
 
-    const nearestMark = marksBeforeCurrent[marksBeforeCurrent.length - 1];
-    if (nearestMark === undefined) {
-      return 0;
+    const nearest = marksBefore[marksBefore.length - 1];
+    if (nearest === undefined) {
+      return null;
     }
-    return marksList.indexOf(nearestMark);
+
+    return marks.indexOf(nearest);
   };
+
+  const enabled = markLoopIndex !== null;
 
   const handleClick = () => {
-    if (isMarkLoopEnabled) {
+    if (enabled) {
       onToggleMarkLoop(null);
-    } else {
-      const nearestIndex = findNearestPreviousMark();
-      onToggleMarkLoop(nearestIndex);
+      return;
     }
-  };
 
-  const isDisabled = marksList.length === 0;
+    const nearestIndex = findNearestBefore();
+    onToggleMarkLoop(nearestIndex);
+  };
 
   return (
     <button
       type="button"
-      className={`${iconButtonStyle} ${isMarkLoopEnabled ? "bg-purple-700 text-white" : ""}`}
+      className={cn(iconButtonStyle, {
+        "bg-purple-700 text-white": enabled,
+      })}
       onClick={handleClick}
-      disabled={isDisabled}
-      title={isMarkLoopEnabled ? "Disable mark loop" : "Enable mark loop"}
+      disabled={marks.length === 0}
+      title={enabled ? "Disable mark loop" : "Enable mark loop"}
     >
       <RotateCcw />
     </button>

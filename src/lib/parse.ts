@@ -8,3 +8,9 @@ export const getNumber = (v: string | null) => {
   }
   return n;
 };
+
+export const getNumbers = (v: string | null) => {
+  return (v?.split(",") ?? [])
+    .map((m) => getNumber(m))
+    .filter((n) => typeof n === "number");
+};

@@ -1,8 +1,6 @@
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
-  ChevronFirst,
-  ChevronLast,
   StepBack,
   StepForward,
 } from "lucide-react";
@@ -27,7 +25,7 @@ import {
   useYoutubePlayer,
   YoutubePlayerContainer,
 } from "~/component/youtube";
-import { getNumber } from "~/lib/parse";
+import { getNumber, getNumbers } from "~/lib/parse";
 
 export function PlayerRoute() {
   return (
@@ -54,11 +52,7 @@ function PlayerController() {
   const rate = getNumber(searchParams.get("rate")) || 1;
   const [playbackRate, setPlaybackRate] = useState(rate);
 
-  const marksParam = searchParams.get("marks");
-  const marks = (marksParam?.split(",") ?? [])
-    .map((m) => getNumber(m))
-    .filter((n) => !!n) as number[];
-  const [marksList, setMarksList] = useState(marks);
+  const [marks, setMarks] = useState(getNumbers(searchParams.get("marks")));
 
   const [markLoopIndex, setMarkLoopIndex] = useState<number | null>(
     getNumber(searchParams.get("markLoopIndex")) ?? null,
@@ -72,8 +66,6 @@ function PlayerController() {
   const stepBackIcon = useMemo(() => <StepBack />, []);
   const stepForwardIcon = useMemo(() => <StepForward />, []);
   const arrowRightToLineIcon = useMemo(() => <ArrowRightToLine />, []);
-  const chevronFirstIcon = useMemo(() => <ChevronFirst />, []);
-  const chevronLastIcon = useMemo(() => <ChevronLast />, []);
 
   const {
     player,
@@ -93,7 +85,7 @@ function PlayerController() {
     startSeconds,
     endSeconds,
     setPlaybackRate: memoizedSetPlaybackRate,
-    marksList,
+    marks,
     markLoopIndex,
   });
 
@@ -106,7 +98,7 @@ function PlayerController() {
       start: startSeconds.toString(),
       end: endSeconds?.toString() ?? duration.toString(),
       rate: playbackRate.toString(),
-      marks: marksList.join(","),
+      marks: marks.join(","),
       markLoopIndex: markLoopIndex?.toString() ?? "",
     };
     setSearchParams(params);
@@ -116,7 +108,7 @@ function PlayerController() {
     endSeconds,
     duration,
     playbackRate,
-    marksList,
+    marks,
     markLoopIndex,
     setSearchParams,
   ]);
@@ -139,7 +131,7 @@ function PlayerController() {
         setEndSeconds={memoizedSetEndSeconds}
         getCurrentTime={getCurrentTime}
         seekTo={seekTo}
-        marks={marksList}
+        marks={marks}
         markLoopIndex={markLoopIndex}
         className="col-span-3 col-start-1"
       />
@@ -148,17 +140,17 @@ function PlayerController() {
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
         <AddMarkButton
           getCurrentTime={getCurrentTime}
-          marksList={marksList}
-          onAddMark={setMarksList}
+          marks={marks}
+          onAddMark={setMarks}
         />
         <DeleteMarkButton
           getCurrentTime={getCurrentTime}
-          marksList={marksList}
-          onDeleteMark={setMarksList}
+          marks={marks}
+          onDeleteMark={setMarks}
         />
         <MarkLoopToggleButton
           markLoopIndex={markLoopIndex}
-          marksList={marksList}
+          marks={marks}
           onToggleMarkLoop={setMarkLoopIndex}
           getCurrentTime={getCurrentTime}
         />
@@ -177,11 +169,9 @@ function PlayerController() {
           pauseVideo={pauseVideo}
           seekTo={seekTo}
           getCurrentTime={getCurrentTime}
-          marks={marksList}
+          marks={marks}
           fallbackSeconds={startSeconds}
-        >
-          {chevronFirstIcon}
-        </SeekToPreviousButton>
+        />
         <SeekButton
           pauseVideo={pauseVideo}
           getCurrentTime={getCurrentTime}
@@ -210,11 +200,9 @@ function PlayerController() {
           pauseVideo={pauseVideo}
           seekTo={seekTo}
           getCurrentTime={getCurrentTime}
-          marks={marksList}
+          marks={marks}
           fallbackSeconds={Math.max(0, (endSeconds ?? duration) - 16 * frame)}
-        >
-          {chevronLastIcon}
-        </SeekToNextButton>
+        />
         <SetRangeButton
           getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetEndSeconds}
