@@ -193,7 +193,10 @@ function PlayerController() {
         <PlayPauseButton
           playVideo={playVideo}
           pauseVideo={pauseVideo}
-          isPaused={playerState === PlayerStates.PAUSED}
+          isPaused={
+            playerState === PlayerStates.PAUSED ||
+            playerState === PlayerStates.UNSTARTED
+          }
         />
         <SeekButton
           pauseVideo={pauseVideo}
