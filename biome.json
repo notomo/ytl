@@ -23,6 +23,20 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "correctness": {
+        "noUnusedVariables": {
+          "level": "warn",
+          "fix": "none",
+          "options": {
+            "ignoreRestSiblings": false
+          }
+        },
+        "noUnusedImports": {
+          "level": "warn",
+          "fix": "unsafe",
+          "options": {}
+        }
+      },
       "nursery": {
         "useSortedClasses": "warn"
       }
