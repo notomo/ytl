@@ -11,6 +11,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   getCurrentTime,
   seekTo,
   marks = [],
+  markLoopIndex,
   className,
 }: {
   startSeconds: number;
@@ -21,6 +22,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   getCurrentTime: () => number;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   marks?: number[];
+  markLoopIndex?: number | null;
   className?: string;
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -139,15 +141,24 @@ export const RangeSlider = React.memo(function RangeSlider({
         getCurrentTime={getCurrentTime}
         duration={duration}
       />
-      {marks.map((mark) => (
-        <div
-          key={mark}
-          className="-translate-y-1/2 absolute top-1/2 h-1/2 w-1 bg-red-500"
-          style={{
-            left: `${rangerInstance.getPercentageForValue(mark)}%`,
-          }}
-        />
-      ))}
+      {marks.map((mark, index) => {
+        const isActiveLoopMark =
+          markLoopIndex !== null &&
+          markLoopIndex !== undefined &&
+          (index === markLoopIndex || index === markLoopIndex + 1);
+        return (
+          <div
+            key={mark}
+            className={cn(
+              `-translate-y-1/2 absolute top-1/2 h-1/2 w-1`,
+              isActiveLoopMark ? "bg-purple-500" : "bg-red-500",
+            )}
+            style={{
+              left: `${rangerInstance.getPercentageForValue(mark)}%`,
+            }}
+          />
+        );
+      })}
     </div>
   );
 });

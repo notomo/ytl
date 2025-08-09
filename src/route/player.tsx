@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Loading } from "~/component/loading";
 import { AddMarkButton, DeleteMarkButton } from "~/component/mark-button";
+import { MarkLoopToggleButton } from "~/component/mark-loop-toggle-button";
 import { PlayPauseButton } from "~/component/play-pause-button";
 import { PlaybackRateSlider } from "~/component/playback-rate-slider";
 import { RangeSlider } from "~/component/range-slider";
@@ -59,6 +60,10 @@ function PlayerController() {
     .filter((n) => !!n) as number[];
   const [marksList, setMarksList] = useState(marks);
 
+  const [markLoopIndex, setMarkLoopIndex] = useState<number | null>(
+    getNumber(searchParams.get("markLoopIndex")) ?? null,
+  );
+
   const memoizedSetStartSeconds = useCallback(setStartSeconds, []);
   const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
   const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
@@ -88,6 +93,8 @@ function PlayerController() {
     startSeconds,
     endSeconds,
     setPlaybackRate: memoizedSetPlaybackRate,
+    marksList,
+    markLoopIndex,
   });
 
   const updateSearchParams = useCallback(() => {
@@ -100,6 +107,7 @@ function PlayerController() {
       end: endSeconds?.toString() ?? duration.toString(),
       rate: playbackRate.toString(),
       marks: marksList.join(","),
+      markLoopIndex: markLoopIndex?.toString() ?? "",
     };
     setSearchParams(params);
   }, [
@@ -109,6 +117,7 @@ function PlayerController() {
     duration,
     playbackRate,
     marksList,
+    markLoopIndex,
     setSearchParams,
   ]);
 
@@ -131,6 +140,7 @@ function PlayerController() {
         getCurrentTime={getCurrentTime}
         seekTo={seekTo}
         marks={marksList}
+        markLoopIndex={markLoopIndex}
         className="col-span-3 col-start-1"
       />
 
@@ -145,6 +155,11 @@ function PlayerController() {
           getCurrentTime={getCurrentTime}
           marksList={marksList}
           onDeleteMark={setMarksList}
+        />
+        <MarkLoopToggleButton
+          markLoopIndex={markLoopIndex}
+          marksList={marksList}
+          onToggleMarkLoop={setMarkLoopIndex}
         />
       </div>
 
