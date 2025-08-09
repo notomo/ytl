@@ -160,6 +160,7 @@ function PlayerController() {
           markLoopIndex={markLoopIndex}
           marksList={marksList}
           onToggleMarkLoop={setMarkLoopIndex}
+          getCurrentTime={getCurrentTime}
         />
       </div>
 
