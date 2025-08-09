@@ -121,7 +121,7 @@ function PlayerController() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-y-4">
+    <div className="grid grid-cols-3 gap-y-4 px-4">
       <RangeSlider
         startSeconds={startSeconds}
         endSeconds={endSeconds}
@@ -206,7 +206,7 @@ function PlayerController() {
         <TimeView seconds={endSeconds ?? duration} />
       </div>
 
-      <div className="col-span-1 flex items-center gap-2 justify-self-end">
+      <div className="col-span-1 flex w-9/12 items-center gap-2 justify-self-end">
         <PlaybackRateSlider
           playbackRate={playbackRate}
           availablePlaybackRates={availablePlaybackRates}

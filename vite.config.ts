@@ -6,4 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   base: "/ytl/",
   plugins: [react(), tsconfigPaths()],
+  server: {
+    // allowedHosts: [".trycloudflare.com"], // for tunnel
+  },
 });

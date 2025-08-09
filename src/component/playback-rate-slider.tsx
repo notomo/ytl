@@ -48,7 +48,7 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
     <div
       ref={rangerRef}
       className={cn(
-        "-translate-y-1/2 relative h-2 w-80 select-none rounded-md bg-gray-700",
+        "-translate-y-1/2 relative h-2 w-full select-none rounded-md bg-gray-700",
         className,
       )}
     >
