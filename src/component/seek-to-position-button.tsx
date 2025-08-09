@@ -26,7 +26,7 @@ export const SeekToNextButton = React.memo(function SeekToNextButton({
 
   return (
     <button type="button" className={iconButtonStyle} onClick={onClick}>
-      <ChevronFirst />
+      <ChevronLast />
     </button>
   );
 });
@@ -55,7 +55,7 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
 
   return (
     <button type="button" className={iconButtonStyle} onClick={onClick}>
-      <ChevronLast />
+      <ChevronFirst />
     </button>
   );
 });
