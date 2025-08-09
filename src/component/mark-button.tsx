@@ -43,10 +43,20 @@ export const DeleteMarkButton = React.memo(function DeleteMarkButton({
   const handleClick = () => {
     const currentTime = getCurrentTime();
     const previousMarks = marksList.filter((mark) => mark <= currentTime);
+
     if (previousMarks.length > 0) {
       const lastMark = Math.max(...previousMarks);
       const newMarks = marksList.filter((mark) => mark !== lastMark);
       onDeleteMark(newMarks);
+      return;
+    }
+
+    const nextMarks = marksList.filter((mark) => mark > currentTime);
+    if (nextMarks.length > 0) {
+      const firstMark = Math.min(...nextMarks);
+      const newMarks = marksList.filter((mark) => mark !== firstMark);
+      onDeleteMark(newMarks);
+      return;
     }
   };
 
@@ -55,7 +65,7 @@ export const DeleteMarkButton = React.memo(function DeleteMarkButton({
       type="button"
       className={iconButtonStyle}
       onClick={handleClick}
-      title="Remove previous mark"
+      title="Remove nearest mark"
     >
       <Minus />
     </button>
