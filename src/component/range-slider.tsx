@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
+import { isActiveMark } from "./mark";
 import { type RangeInstance, useRange } from "./range";
 
 export const RangeSlider = React.memo(function RangeSlider({
@@ -10,7 +11,7 @@ export const RangeSlider = React.memo(function RangeSlider({
   setEndSeconds,
   getCurrentTime,
   seekTo,
-  marks = [],
+  marks,
   markLoopIndex,
   className,
 }: {
@@ -21,8 +22,8 @@ export const RangeSlider = React.memo(function RangeSlider({
   setEndSeconds: (s: number) => void;
   getCurrentTime: () => number;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-  marks?: number[];
-  markLoopIndex?: number | null;
+  marks: number[];
+  markLoopIndex: number | null;
   className?: string;
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -142,10 +143,7 @@ export const RangeSlider = React.memo(function RangeSlider({
         duration={duration}
       />
       {marks.map((mark, index) => {
-        const isActiveLoopMark =
-          markLoopIndex !== null &&
-          markLoopIndex !== undefined &&
-          (index === markLoopIndex || index === markLoopIndex + 1);
+        const isActiveLoopMark = isActiveMark({ mark, index, markLoopIndex });
         return (
           <div
             key={mark}

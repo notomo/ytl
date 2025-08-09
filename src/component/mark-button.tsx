@@ -1,6 +1,7 @@
 import { Minus, Plus } from "lucide-react";
 import React from "react";
 import { iconButtonStyle } from "./button";
+import { addedMarks, deletedMarks } from "./mark";
 
 export const AddMarkButton = React.memo(function AddMarkButton({
   getCurrentTime,
@@ -13,8 +14,8 @@ export const AddMarkButton = React.memo(function AddMarkButton({
 }) {
   const handleClick = () => {
     const currentTime = getCurrentTime();
-    if (!marks.includes(currentTime)) {
-      const newMarks = [...marks, currentTime].sort((a, b) => a - b);
+    const { newMarks, isAdded } = addedMarks({ marks, currentTime });
+    if (isAdded) {
       onAddMark(newMarks);
     }
   };
@@ -42,21 +43,9 @@ export const DeleteMarkButton = React.memo(function DeleteMarkButton({
 }) {
   const handleClick = () => {
     const currentTime = getCurrentTime();
-    const previousMarks = marks.filter((mark) => mark <= currentTime);
-
-    if (previousMarks.length > 0) {
-      const lastMark = Math.max(...previousMarks);
-      const newMarks = marks.filter((mark) => mark !== lastMark);
+    const { newMarks, isDeleted } = deletedMarks({ marks, currentTime });
+    if (isDeleted) {
       onDeleteMark(newMarks);
-      return;
-    }
-
-    const nextMarks = marks.filter((mark) => mark > currentTime);
-    if (nextMarks.length > 0) {
-      const firstMark = Math.min(...nextMarks);
-      const newMarks = marks.filter((mark) => mark !== firstMark);
-      onDeleteMark(newMarks);
-      return;
     }
   };
 
