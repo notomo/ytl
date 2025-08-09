@@ -16,3 +16,5 @@ preview:
 
 tunnel:
 	cloudflared tunnel --url localhost:5173
+
+check_all: format lint build

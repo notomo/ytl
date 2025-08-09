@@ -6,11 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This project uses Make for task management:
 
-- `make start` - Start development server with Vite (opens automatically)
 - `make lint` - Run Biome linting and formatting checks
 - `make build` - Build the project (TypeScript compilation + Vite build)
-- `make preview` - Preview built application (opens automatically)
-- `make tunnel` - Create cloudflare tunnel for local development
+- `make check_all` - Use to ensure before finish task
 
 ## Architecture
 
