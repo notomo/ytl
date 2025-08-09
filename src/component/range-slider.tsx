@@ -14,6 +14,8 @@ export const RangeSlider = React.memo(function RangeSlider({
   marks,
   markLoopIndex,
   className,
+  isCutStart = false,
+  isCutEnd = false,
 }: {
   startSeconds: number;
   endSeconds?: number;
@@ -25,6 +27,8 @@ export const RangeSlider = React.memo(function RangeSlider({
   marks: number[];
   markLoopIndex: number | null;
   className?: string;
+  isCutStart?: boolean;
+  isCutEnd?: boolean;
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -41,11 +45,14 @@ export const RangeSlider = React.memo(function RangeSlider({
     [setStartSeconds, setEndSeconds],
   );
 
+  const effectiveMin = isCutStart ? startSeconds : 0;
+  const effectiveMax = isCutEnd ? (endSeconds ?? duration) : duration;
+
   const rangerInstance = useRange({
     getRangerElement: () => ref.current,
     values: [startSeconds, endSeconds ?? duration],
-    min: 0,
-    max: duration,
+    min: effectiveMin,
+    max: effectiveMax,
     stepSize: 1,
     onChange,
   });
@@ -63,12 +70,16 @@ export const RangeSlider = React.memo(function RangeSlider({
 
       const rect = e.currentTarget.getBoundingClientRect();
       const percentage = ((e.clientX - rect.left) / rect.width) * 100;
-      const seconds = (percentage / 100) * duration;
-      const clampedSeconds = Math.max(0, Math.min(duration, seconds));
+      const seconds =
+        (percentage / 100) * (effectiveMax - effectiveMin) + effectiveMin;
+      const clampedSeconds = Math.max(
+        effectiveMin,
+        Math.min(effectiveMax, seconds),
+      );
 
       seekTo(clampedSeconds, true);
     },
-    [duration, seekTo],
+    [effectiveMin, effectiveMax, seekTo],
   );
 
   const handleKeyDown = useCallback(
@@ -141,22 +152,26 @@ export const RangeSlider = React.memo(function RangeSlider({
       <CurrentTimeIndicator
         getCurrentTime={getCurrentTime}
         duration={duration}
+        effectiveMin={effectiveMin}
+        effectiveMax={effectiveMax}
       />
-      {marks.map((mark, index) => {
-        const isActiveLoopMark = isActiveMark({ mark, index, markLoopIndex });
-        return (
-          <div
-            key={mark}
-            className={cn(
-              `-translate-y-1/2 absolute top-1/2 h-1/2 w-1`,
-              isActiveLoopMark ? "bg-purple-500" : "bg-red-500",
-            )}
-            style={{
-              left: `${rangerInstance.getPercentageForValue(mark)}%`,
-            }}
-          />
-        );
-      })}
+      {marks
+        .filter((mark) => mark >= effectiveMin && mark <= effectiveMax)
+        .map((mark, index) => {
+          const isActiveLoopMark = isActiveMark({ mark, index, markLoopIndex });
+          return (
+            <div
+              key={mark}
+              className={cn(
+                `-translate-y-1/2 absolute top-1/2 h-1/2 w-1`,
+                isActiveLoopMark ? "bg-purple-500" : "bg-red-500",
+              )}
+              style={{
+                left: `${rangerInstance.getPercentageForValue(mark)}%`,
+              }}
+            />
+          );
+        })}
     </div>
   );
 });
@@ -164,9 +179,13 @@ export const RangeSlider = React.memo(function RangeSlider({
 export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
   duration,
   getCurrentTime,
+  effectiveMin = 0,
+  effectiveMax,
 }: {
   duration: number;
   getCurrentTime: () => number;
+  effectiveMin?: number;
+  effectiveMax?: number;
 }) {
   const [currentTime, setCurrentTime] = useState(() => getCurrentTime());
 
@@ -180,7 +199,16 @@ export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
     };
   }, [getCurrentTime]);
 
-  const percent = (currentTime / duration) * 100;
+  const actualEffectiveMax = effectiveMax ?? duration;
+  const isInRange =
+    currentTime >= effectiveMin && currentTime <= actualEffectiveMax;
+
+  if (!isInRange) {
+    return null;
+  }
+
+  const percent =
+    ((currentTime - effectiveMin) / (actualEffectiveMax - effectiveMin)) * 100;
 
   return (
     <div

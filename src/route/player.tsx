@@ -52,6 +52,12 @@ function PlayerController() {
   const rate = getNumber(searchParams.get("rate")) || 1;
   const [playbackRate, setPlaybackRate] = useState(rate);
 
+  const cutStart = getNumber(searchParams.get("cutStart")) || 0;
+  const [isCutStart, setIsCutStart] = useState(cutStart === 1);
+
+  const cutEnd = getNumber(searchParams.get("cutEnd")) || 0;
+  const [isCutEnd, setIsCutEnd] = useState(cutEnd === 1);
+
   const [marks, setMarks] = useState(getNumbers(searchParams.get("marks")));
 
   const [markLoopIndex, setMarkLoopIndex] = useState<number | null>(
@@ -100,6 +106,8 @@ function PlayerController() {
       rate: playbackRate.toString(),
       marks: marks.join(","),
       markLoopIndex: markLoopIndex?.toString() ?? "",
+      cutStart: isCutStart ? "1" : "0",
+      cutEnd: isCutEnd ? "1" : "0",
     };
     setSearchParams(params);
   }, [
@@ -110,6 +118,8 @@ function PlayerController() {
     playbackRate,
     marks,
     markLoopIndex,
+    isCutStart,
+    isCutEnd,
     setSearchParams,
   ]);
 
@@ -134,6 +144,8 @@ function PlayerController() {
         marks={marks}
         markLoopIndex={markLoopIndex}
         className="col-span-3 col-start-1"
+        isCutStart={isCutStart}
+        isCutEnd={isCutEnd}
       />
 
       <div className="col-span-1 flex items-center gap-2">
@@ -157,7 +169,12 @@ function PlayerController() {
       </div>
 
       <div className="col-span-1 col-start-2 flex items-center gap-5 justify-self-center">
-        <TimeView seconds={startSeconds} />
+        <TimeView
+          seconds={startSeconds}
+          onToggleCut={() => setIsCutStart(!isCutStart)}
+          isCut={isCutStart}
+          cutType="start"
+        />
         <SetRangeButton
           getCurrentTime={getCurrentTime}
           setSeconds={memoizedSetStartSeconds}
@@ -210,7 +227,12 @@ function PlayerController() {
         >
           {arrowRightToLineIcon}
         </SetRangeButton>
-        <TimeView seconds={endSeconds ?? duration} />
+        <TimeView
+          seconds={endSeconds ?? duration}
+          onToggleCut={() => setIsCutEnd(!isCutEnd)}
+          isCut={isCutEnd}
+          cutType="end"
+        />
       </div>
 
       <div className="col-span-1 flex w-9/12 items-center gap-2 justify-self-end">
