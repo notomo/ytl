@@ -4,18 +4,16 @@ import { cn } from "~/lib/tailwind";
 import { iconButtonStyle } from "./button";
 
 export const MarkLoopToggleButton = React.memo(function MarkLoopToggleButton({
-  markLoopIndex,
+  enabled,
   marks,
   onToggleMarkLoop,
   getCurrentTime,
 }: {
-  markLoopIndex: number | null;
+  enabled: boolean;
   marks: number[];
   onToggleMarkLoop: (index: number | null) => void;
   getCurrentTime: () => number;
 }) {
-  const enabled = markLoopIndex !== null;
-
   const handleClick = () => {
     if (enabled) {
       onToggleMarkLoop(null);

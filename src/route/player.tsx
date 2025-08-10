@@ -161,7 +161,7 @@ function PlayerController() {
           onDeleteMark={setMarks}
         />
         <MarkLoopToggleButton
-          markLoopIndex={markLoopIndex}
+          enabled={markLoopIndex !== null}
           marks={marks}
           onToggleMarkLoop={setMarkLoopIndex}
           getCurrentTime={getCurrentTime}
