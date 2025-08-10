@@ -185,7 +185,7 @@ describe("findNearestSegment", () => {
 
   it("should return correct index when currentTime equals a mark", () => {
     const result = findNearestSegment({ marks: [10, 20, 30], currentTime: 20 });
-    expect(result).toBe(1);
+    expect(result).toBe(2);
   });
 
   it("should return correct index when currentTime is between marks", () => {

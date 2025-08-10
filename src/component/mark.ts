@@ -154,7 +154,7 @@ export function findNearestSegment({
   const sorted = marks.toSorted((a, b) => a - b);
 
   for (const [index, mark] of sorted.entries()) {
-    if (currentTime <= mark) {
+    if (currentTime < mark) {
       return index;
     }
   }
