@@ -37,6 +37,64 @@ export function deletedMarks({
   return { newMarks: marks, isDeleted: false };
 }
 
+export function getLoopStartTime({
+  marks,
+  markLoopIndex,
+  startSeconds,
+}: {
+  marks: number[];
+  markLoopIndex?: number | null;
+  startSeconds?: number;
+}): number {
+  if (markLoopIndex == null) {
+    return startSeconds ?? 0;
+  }
+
+  const sorted = marks.toSorted((a, b) => a - b);
+
+  if (markLoopIndex === 0) {
+    return startSeconds ?? 0;
+  }
+
+  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
+    return startSeconds ?? 0;
+  }
+
+  return sorted[markLoopIndex - 1] ?? startSeconds ?? 0;
+}
+
+export function getLoopEndTime({
+  marks,
+  markLoopIndex,
+  endSeconds,
+}: {
+  marks: number[];
+  markLoopIndex?: number | null;
+  endSeconds?: number;
+}): number {
+  if (markLoopIndex == null) {
+    return endSeconds ?? 0;
+  }
+
+  const sorted = marks.toSorted((a, b) => a - b);
+
+  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
+    return endSeconds ?? 0;
+  }
+
+  if (markLoopIndex === 0) {
+    return sorted.length > 0
+      ? (sorted[0] ?? endSeconds ?? 0)
+      : (endSeconds ?? 0);
+  }
+
+  if (markLoopIndex === sorted.length) {
+    return endSeconds ?? 0;
+  }
+
+  return sorted[markLoopIndex] ?? endSeconds ?? 0;
+}
+
 export function findNearestSegment({
   marks,
   currentTime,

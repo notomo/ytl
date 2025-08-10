@@ -1,54 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
-function getLoopStartTime(
-  marks: number[],
-  markLoopIndex?: number | null,
-  defaultStart?: number,
-): number {
-  if (markLoopIndex == null) {
-    return defaultStart ?? 0;
-  }
-
-  const sorted = marks.toSorted((a, b) => a - b);
-
-  if (markLoopIndex === 0) {
-    return defaultStart ?? 0;
-  }
-
-  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
-    return defaultStart ?? 0;
-  }
-
-  return sorted[markLoopIndex - 1] ?? defaultStart ?? 0;
-}
-
-function getLoopEndTime(
-  marks: number[],
-  markLoopIndex?: number | null,
-  defaultEnd?: number,
-): number {
-  if (markLoopIndex == null) {
-    return defaultEnd ?? 0;
-  }
-
-  const sorted = marks.toSorted((a, b) => a - b);
-
-  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
-    return defaultEnd ?? 0;
-  }
-
-  if (markLoopIndex === 0) {
-    return sorted.length > 0
-      ? (sorted[0] ?? defaultEnd ?? 0)
-      : (defaultEnd ?? 0);
-  }
-
-  if (markLoopIndex === sorted.length) {
-    return defaultEnd ?? 0;
-  }
-
-  return sorted[markLoopIndex] ?? defaultEnd ?? 0;
-}
+import { getLoopEndTime, getLoopStartTime } from "./mark";
 
 declare global {
   var YT: IframeApiType;
@@ -176,11 +127,11 @@ export function useYoutubePlayer({
 
       switch (event.data) {
         case PlayerStates.ENDED: {
-          const loopStart = getLoopStartTime(
+          const loopStart = getLoopStartTime({
             marks,
             markLoopIndex,
             startSeconds,
-          );
+          });
           event.target.seekTo(loopStart, true);
           event.target.playVideo();
           break;
@@ -195,17 +146,15 @@ export function useYoutubePlayer({
           const v = videoUrl.searchParams.get("v");
           setVideoId(v || videoId);
 
-          if (savedTimeRef.current !== null) {
-            event.target.seekTo(savedTimeRef.current, true);
-            savedTimeRef.current = null;
-          } else if (markLoopIndex != null && marks.length > 0) {
-            const loopStart = getLoopStartTime(
+          const loopStart =
+            savedTimeRef.current ??
+            getLoopStartTime({
               marks,
               markLoopIndex,
               startSeconds,
-            );
-            event.target.seekTo(loopStart, true);
-          }
+            });
+          event.target.seekTo(loopStart, true);
+          savedTimeRef.current = null;
 
           event.target.playVideo();
           break;
@@ -226,14 +175,12 @@ export function useYoutubePlayer({
         savedTimeRef.current = playerRef.current.getCurrentTime();
       }
 
-      const loopStart =
-        markLoopIndex != null && marks.length > 0
-          ? getLoopStartTime(marks, markLoopIndex, startSeconds)
-          : startSeconds;
-      const loopEnd =
-        markLoopIndex != null && marks.length > 0
-          ? getLoopEndTime(marks, markLoopIndex, endSeconds)
-          : endSeconds;
+      const loopStart = getLoopStartTime({
+        marks,
+        markLoopIndex,
+        startSeconds,
+      });
+      const loopEnd = getLoopEndTime({ marks, markLoopIndex, endSeconds });
 
       playerRef.current.cueVideoById({
         videoId,
@@ -250,14 +197,16 @@ export function useYoutubePlayer({
         events: {
           onReady: (event) => {
             playerRef.current = event.target;
-            const loopStart =
-              markLoopIndex != null && marks.length > 0
-                ? getLoopStartTime(marks, markLoopIndex, startSeconds)
-                : startSeconds;
-            const loopEnd =
-              markLoopIndex != null && marks.length > 0
-                ? getLoopEndTime(marks, markLoopIndex, endSeconds)
-                : endSeconds;
+            const loopStart = getLoopStartTime({
+              marks,
+              markLoopIndex,
+              startSeconds,
+            });
+            const loopEnd = getLoopEndTime({
+              marks,
+              markLoopIndex,
+              endSeconds,
+            });
 
             event.target.cueVideoById({
               videoId,
