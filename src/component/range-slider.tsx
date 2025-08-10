@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "~/lib/tailwind";
+import { getLoopRange } from "./mark";
 import { type RangeInstance, useRange } from "./range";
 
 export const RangeSlider = React.memo(function RangeSlider({
@@ -57,48 +58,23 @@ export const RangeSlider = React.memo(function RangeSlider({
   });
 
   const leftPercentage = rangerInstance.getPercentageForValue(startSeconds);
-
   const rightPercentage = rangerInstance.getPercentageForValue(
     endSeconds ?? duration,
   );
 
-  const getMarkLoopRange = () => {
-    if (markLoopIndex === null) {
-      return null;
-    }
-
-    const sortedMarks = marks.toSorted((a, b) => a - b);
-
-    if (markLoopIndex < 0 || markLoopIndex > sortedMarks.length) {
-      return null;
-    }
-
-    let loopStartTime: number;
-    let loopEndTime: number;
-
-    if (markLoopIndex === 0) {
-      loopStartTime = startSeconds;
-      loopEndTime =
-        sortedMarks.length > 0
-          ? (sortedMarks[0] ?? endSeconds ?? duration)
-          : (endSeconds ?? duration);
-    } else if (markLoopIndex === sortedMarks.length) {
-      loopStartTime = sortedMarks[markLoopIndex - 1] ?? startSeconds;
-      loopEndTime = endSeconds ?? duration;
-    } else {
-      loopStartTime = sortedMarks[markLoopIndex - 1] ?? startSeconds;
-      loopEndTime = sortedMarks[markLoopIndex] ?? endSeconds ?? duration;
-    }
-
-    return {
-      start: loopStartTime,
-      end: loopEndTime,
-      startPercentage: rangerInstance.getPercentageForValue(loopStartTime),
-      endPercentage: rangerInstance.getPercentageForValue(loopEndTime),
-    };
-  };
-
-  const markLoopRange = getMarkLoopRange();
+  const loopRange = getLoopRange({
+    marks,
+    markLoopIndex,
+    startSeconds,
+    endSeconds,
+    duration,
+  });
+  const loopPercentage = loopRange
+    ? {
+        start: rangerInstance.getPercentageForValue(loopRange.start),
+        end: rangerInstance.getPercentageForValue(loopRange.end),
+      }
+    : null;
 
   const handleSliderClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -150,12 +126,12 @@ export const RangeSlider = React.memo(function RangeSlider({
           left: `${leftPercentage}%`,
         }}
       />
-      {markLoopRange && (
+      {loopPercentage && (
         <div
           className="absolute h-full bg-purple-600"
           style={{
-            width: `${markLoopRange.endPercentage - markLoopRange.startPercentage}%`,
-            left: `${markLoopRange.startPercentage}%`,
+            width: `${loopPercentage.end - loopPercentage.start}%`,
+            left: `${loopPercentage.start}%`,
           }}
         />
       )}

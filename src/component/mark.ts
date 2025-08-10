@@ -95,6 +95,45 @@ export function getLoopEndTime({
   return sorted[markLoopIndex] ?? endSeconds ?? 0;
 }
 
+export function getLoopRange({
+  marks,
+  markLoopIndex,
+  startSeconds,
+  endSeconds,
+  duration,
+}: {
+  marks: number[];
+  markLoopIndex: number | null;
+  startSeconds: number;
+  endSeconds?: number;
+  duration: number;
+}): { start: number; end: number } | null {
+  if (markLoopIndex === null) {
+    return null;
+  }
+
+  if (markLoopIndex < 0 || markLoopIndex > marks.length) {
+    return null;
+  }
+
+  const loopStartTime = getLoopStartTime({
+    marks,
+    markLoopIndex,
+    startSeconds,
+  });
+
+  const loopEndTime = getLoopEndTime({
+    marks,
+    markLoopIndex,
+    endSeconds: endSeconds ?? duration,
+  });
+
+  return {
+    start: loopStartTime,
+    end: loopEndTime,
+  };
+}
+
 export function findNearestSegment({
   marks,
   currentTime,
