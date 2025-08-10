@@ -1,26 +1,3 @@
-export function findMarkNearestBefore({
-  marks,
-  currentTime,
-}: {
-  marks: number[];
-  currentTime: number;
-}): number | null {
-  const marksBefore = marks
-    .toSorted((a, b) => a - b)
-    .filter((mark) => mark <= currentTime);
-
-  if (marksBefore.length === 0) {
-    return null;
-  }
-
-  const nearest = marksBefore[marksBefore.length - 1];
-  if (nearest === undefined) {
-    return null;
-  }
-
-  return marks.indexOf(nearest);
-}
-
 export function addedMarks({
   marks,
   currentTime,
@@ -58,4 +35,22 @@ export function deletedMarks({
   }
 
   return { newMarks: marks, isDeleted: false };
+}
+
+export function findNearestSegment({
+  marks,
+  currentTime,
+}: {
+  marks: number[];
+  currentTime: number;
+}): number {
+  const sorted = marks.toSorted((a, b) => a - b);
+
+  for (const [index, mark] of sorted.entries()) {
+    if (currentTime <= mark) {
+      return index;
+    }
+  }
+
+  return sorted.length;
 }

@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import React from "react";
 import { cn } from "~/lib/tailwind";
 import { iconButtonStyle } from "./button";
+import { findNearestSegment } from "./mark";
 
 export const MarkLoopToggleButton = React.memo(function MarkLoopToggleButton({
   enabled,
@@ -21,18 +22,7 @@ export const MarkLoopToggleButton = React.memo(function MarkLoopToggleButton({
     }
 
     const currentTime = getCurrentTime();
-    const sortedMarks = marks.toSorted((a, b) => a - b);
-
-    let segmentIndex = 0;
-    for (let i = 0; i < sortedMarks.length; i++) {
-      const mark = sortedMarks[i];
-      if (mark !== undefined && currentTime <= mark) {
-        segmentIndex = i;
-        break;
-      }
-      segmentIndex = i + 1;
-    }
-
+    const segmentIndex = findNearestSegment({ marks, currentTime });
     onToggleMarkLoop(segmentIndex);
   };
 
