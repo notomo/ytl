@@ -112,6 +112,38 @@ export function getLoopRange({
   };
 }
 
+export function findPreviousMark({
+  marks,
+  currentTime,
+  fallbackSeconds,
+}: {
+  marks: number[];
+  currentTime: number;
+  fallbackSeconds: number;
+}): number {
+  const previousMarks = marks.filter((mark) => mark < currentTime);
+  if (previousMarks.length > 0) {
+    return Math.max(...previousMarks);
+  }
+  return fallbackSeconds;
+}
+
+export function findNextMark({
+  marks,
+  currentTime,
+  fallbackSeconds,
+}: {
+  marks: number[];
+  currentTime: number;
+  fallbackSeconds: number;
+}): number {
+  const nextMarks = marks.filter((mark) => mark > currentTime);
+  if (nextMarks.length > 0) {
+    return Math.min(...nextMarks);
+  }
+  return fallbackSeconds;
+}
+
 export function findNearestSegment({
   marks,
   currentTime,

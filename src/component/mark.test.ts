@@ -3,6 +3,8 @@ import {
   addedMarks,
   deletedMarks,
   findNearestSegment,
+  findNextMark,
+  findPreviousMark,
   getLoopEndTime,
   getLoopRange,
   getLoopStartTime,
@@ -204,5 +206,81 @@ describe("findNearestSegment", () => {
   it("should handle unsorted marks", () => {
     const result = findNearestSegment({ marks: [30, 10, 20], currentTime: 15 });
     expect(result).toBe(1);
+  });
+});
+
+describe("findPreviousMark", () => {
+  it("should return the closest previous mark when exists", () => {
+    const result = findPreviousMark({
+      marks: [10, 20, 30],
+      currentTime: 25,
+      fallbackSeconds: 0,
+    });
+    expect(result).toBe(20);
+  });
+
+  it("should return fallbackSeconds when no previous marks exist", () => {
+    const result = findPreviousMark({
+      marks: [20, 30, 40],
+      currentTime: 10,
+      fallbackSeconds: 5,
+    });
+    expect(result).toBe(5);
+  });
+
+  it("should return fallbackSeconds when marks array is empty", () => {
+    const result = findPreviousMark({
+      marks: [],
+      currentTime: 15,
+      fallbackSeconds: 8,
+    });
+    expect(result).toBe(8);
+  });
+
+  it("should not include current time mark", () => {
+    const result = findPreviousMark({
+      marks: [10, 20, 30],
+      currentTime: 20,
+      fallbackSeconds: 0,
+    });
+    expect(result).toBe(10);
+  });
+});
+
+describe("findNextMark", () => {
+  it("should return the closest next mark when exists", () => {
+    const result = findNextMark({
+      marks: [10, 20, 30],
+      currentTime: 15,
+      fallbackSeconds: 40,
+    });
+    expect(result).toBe(20);
+  });
+
+  it("should return fallbackSeconds when no next marks exist", () => {
+    const result = findNextMark({
+      marks: [10, 20, 30],
+      currentTime: 35,
+      fallbackSeconds: 45,
+    });
+    expect(result).toBe(45);
+  });
+
+  it("should return fallbackSeconds when marks array is empty", () => {
+    const result = findNextMark({
+      marks: [],
+      currentTime: 15,
+      fallbackSeconds: 25,
+    });
+    expect(result).toBe(25);
+  });
+
+  it("should not include current time mark", () => {
+    const result = findNextMark({
+      marks: [10, 20, 30],
+      currentTime: 20,
+      fallbackSeconds: 40,
+    });
+    expect(result).toBe(30);
   });
 });

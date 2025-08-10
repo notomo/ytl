@@ -1,6 +1,7 @@
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import React, { useCallback } from "react";
 import { iconButtonStyle } from "~/component/button";
+import { findNextMark, findPreviousMark } from "~/component/mark";
 
 export const SeekToNextButton = React.memo(function SeekToNextButton({
   pauseVideo,
@@ -18,9 +19,7 @@ export const SeekToNextButton = React.memo(function SeekToNextButton({
   const onClick = useCallback(() => {
     pauseVideo();
     const currentTime = getCurrentTime();
-    const nextMarks = marks.filter((mark) => mark > currentTime);
-    const targetSeconds =
-      nextMarks.length > 0 ? Math.min(...nextMarks) : fallbackSeconds;
+    const targetSeconds = findNextMark({ marks, currentTime, fallbackSeconds });
     seekTo(targetSeconds, true);
   }, [pauseVideo, seekTo, getCurrentTime, marks, fallbackSeconds]);
 
@@ -47,9 +46,7 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
   const onClick = useCallback(() => {
     pauseVideo();
     const currentTime = getCurrentTime();
-    const previousMarks = marks.filter((mark) => mark < currentTime);
-    const targetSeconds =
-      previousMarks.length > 0 ? Math.max(...previousMarks) : fallbackSeconds;
+    const targetSeconds = findPreviousMark({ marks, currentTime, fallbackSeconds });
     seekTo(targetSeconds, true);
   }, [pauseVideo, seekTo, getCurrentTime, marks, fallbackSeconds]);
 
