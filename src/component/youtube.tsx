@@ -5,16 +5,21 @@ function getLoopStartTime(
   markLoopIndex?: number | null,
   defaultStart?: number,
 ): number {
-  if (markLoopIndex == null || marks.length === 0) {
+  if (markLoopIndex == null) {
     return defaultStart ?? 0;
   }
 
   const sorted = marks.toSorted((a, b) => a - b);
-  if (markLoopIndex < 0 || markLoopIndex >= sorted.length) {
+
+  if (markLoopIndex === 0) {
     return defaultStart ?? 0;
   }
 
-  return sorted[markLoopIndex] ?? defaultStart ?? 0;
+  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
+    return defaultStart ?? 0;
+  }
+
+  return sorted[markLoopIndex - 1] ?? defaultStart ?? 0;
 }
 
 function getLoopEndTime(
@@ -22,21 +27,27 @@ function getLoopEndTime(
   markLoopIndex?: number | null,
   defaultEnd?: number,
 ): number {
-  if (markLoopIndex == null || marks.length === 0) {
+  if (markLoopIndex == null) {
     return defaultEnd ?? 0;
   }
 
   const sorted = marks.toSorted((a, b) => a - b);
-  if (markLoopIndex < 0 || markLoopIndex >= sorted.length) {
+
+  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
     return defaultEnd ?? 0;
   }
 
-  const nextIndex = markLoopIndex + 1;
-  if (nextIndex < sorted.length) {
-    return sorted[nextIndex] ?? defaultEnd ?? 0;
+  if (markLoopIndex === 0) {
+    return sorted.length > 0
+      ? (sorted[0] ?? defaultEnd ?? 0)
+      : (defaultEnd ?? 0);
   }
 
-  return defaultEnd ?? 0;
+  if (markLoopIndex === sorted.length) {
+    return defaultEnd ?? 0;
+  }
+
+  return sorted[markLoopIndex] ?? defaultEnd ?? 0;
 }
 
 declare global {

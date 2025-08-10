@@ -63,28 +63,37 @@ export const RangeSlider = React.memo(function RangeSlider({
   );
 
   const getMarkLoopRange = () => {
-    if (markLoopIndex === null || marks.length === 0) {
-      return null;
-    }
-    const sortedMarks = marks.toSorted((a, b) => a - b);
-    const loopStartMark = sortedMarks[markLoopIndex];
-    if (loopStartMark === undefined) {
+    if (markLoopIndex === null) {
       return null;
     }
 
-    const nextIndex = markLoopIndex + 1;
+    const sortedMarks = marks.toSorted((a, b) => a - b);
+
+    if (markLoopIndex < 0 || markLoopIndex > sortedMarks.length) {
+      return null;
+    }
+
+    let loopStartTime: number;
     let loopEndTime: number;
 
-    if (nextIndex < sortedMarks.length) {
-      loopEndTime = sortedMarks[nextIndex] ?? endSeconds ?? duration;
-    } else {
+    if (markLoopIndex === 0) {
+      loopStartTime = startSeconds;
+      loopEndTime =
+        sortedMarks.length > 0
+          ? (sortedMarks[0] ?? endSeconds ?? duration)
+          : (endSeconds ?? duration);
+    } else if (markLoopIndex === sortedMarks.length) {
+      loopStartTime = sortedMarks[markLoopIndex - 1] ?? startSeconds;
       loopEndTime = endSeconds ?? duration;
+    } else {
+      loopStartTime = sortedMarks[markLoopIndex - 1] ?? startSeconds;
+      loopEndTime = sortedMarks[markLoopIndex] ?? endSeconds ?? duration;
     }
 
     return {
-      start: loopStartMark,
+      start: loopStartTime,
       end: loopEndTime,
-      startPercentage: rangerInstance.getPercentageForValue(loopStartMark),
+      startPercentage: rangerInstance.getPercentageForValue(loopStartTime),
       endPercentage: rangerInstance.getPercentageForValue(loopEndTime),
     };
   };
