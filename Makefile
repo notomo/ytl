@@ -11,10 +11,13 @@ build:
 	npx tsc -b
 	npx vite build
 
+test:
+	npx vitest --run
+
 preview:
 	npx vite preview --open
 
 tunnel:
 	cloudflared tunnel --url localhost:5173
 
-check_all: format lint build
+check_all: format lint build test
