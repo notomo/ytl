@@ -208,7 +208,7 @@ export const RangeSlider = React.memo(function RangeSlider({
             <div
               key={mark}
               className={
-                "-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-1/2 w-1 bg-red-500"
+                "-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-2/3 w-1 rounded-full bg-red-300"
               }
               style={{
                 left: `${rangerInstance.getPercentageForValue(mark)}%`,
