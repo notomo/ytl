@@ -66,8 +66,7 @@ export const RangeSlider = React.memo(function RangeSlider({
     marks,
     markLoopIndex,
     startSeconds,
-    endSeconds,
-    duration,
+    endSeconds: endSeconds ?? duration,
   });
   const loopPercentage = loopRange
     ? {

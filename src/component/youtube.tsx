@@ -105,8 +105,8 @@ export function useYoutubePlayer({
   startSeconds: number;
   endSeconds?: number;
   setPlaybackRate: (x: number) => void;
-  marks?: number[];
-  markLoopIndex?: number | null;
+  marks: number[];
+  markLoopIndex: number | null;
 }) {
   const playerRef = useRef<YouTubePlayer | null>(null);
   const [videoId, setVideoId] = useState(initialVideoId);
@@ -175,17 +175,18 @@ export function useYoutubePlayer({
         savedTimeRef.current = playerRef.current.getCurrentTime();
       }
 
-      const loopStart = getLoopStartTime({
-        marks,
-        markLoopIndex,
-        startSeconds,
-      });
-      const loopEnd = getLoopEndTime({ marks, markLoopIndex, endSeconds });
-
       playerRef.current.cueVideoById({
         videoId,
-        startSeconds: loopStart,
-        endSeconds: loopEnd,
+        startSeconds: getLoopStartTime({
+          marks,
+          markLoopIndex,
+          startSeconds,
+        }),
+        endSeconds: getLoopEndTime({
+          marks,
+          markLoopIndex,
+          endSeconds: endSeconds ?? playerRef.current.getDuration(),
+        }),
       });
       return;
     }
@@ -197,21 +198,19 @@ export function useYoutubePlayer({
         events: {
           onReady: (event) => {
             playerRef.current = event.target;
-            const loopStart = getLoopStartTime({
-              marks,
-              markLoopIndex,
-              startSeconds,
-            });
-            const loopEnd = getLoopEndTime({
-              marks,
-              markLoopIndex,
-              endSeconds,
-            });
 
             event.target.cueVideoById({
               videoId,
-              startSeconds: loopStart,
-              endSeconds: loopEnd,
+              startSeconds: getLoopStartTime({
+                marks,
+                markLoopIndex,
+                startSeconds,
+              }),
+              endSeconds: getLoopEndTime({
+                marks,
+                markLoopIndex,
+                endSeconds: endSeconds ?? event.target.getDuration(),
+              }),
             });
           },
           onStateChange: (event) => {

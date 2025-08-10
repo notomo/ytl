@@ -43,24 +43,19 @@ export function getLoopStartTime({
   startSeconds,
 }: {
   marks: number[];
-  markLoopIndex?: number | null;
-  startSeconds?: number;
+  markLoopIndex: number | null;
+  startSeconds: number;
 }): number {
-  if (markLoopIndex == null) {
-    return startSeconds ?? 0;
+  if (markLoopIndex === null || markLoopIndex === 0) {
+    return startSeconds;
   }
 
   const sorted = marks.toSorted((a, b) => a - b);
-
-  if (markLoopIndex === 0) {
-    return startSeconds ?? 0;
+  if (markLoopIndex > sorted.length) {
+    return startSeconds;
   }
 
-  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
-    return startSeconds ?? 0;
-  }
-
-  return sorted[markLoopIndex - 1] ?? startSeconds ?? 0;
+  return sorted[markLoopIndex - 1] ?? startSeconds;
 }
 
 export function getLoopEndTime({
@@ -69,30 +64,19 @@ export function getLoopEndTime({
   endSeconds,
 }: {
   marks: number[];
-  markLoopIndex?: number | null;
-  endSeconds?: number;
+  markLoopIndex: number | null;
+  endSeconds: number;
 }): number {
-  if (markLoopIndex == null) {
-    return endSeconds ?? 0;
+  if (markLoopIndex === null) {
+    return endSeconds;
   }
 
   const sorted = marks.toSorted((a, b) => a - b);
-
-  if (markLoopIndex < 0 || markLoopIndex > sorted.length) {
-    return endSeconds ?? 0;
-  }
-
   if (markLoopIndex === 0) {
-    return sorted.length > 0
-      ? (sorted[0] ?? endSeconds ?? 0)
-      : (endSeconds ?? 0);
+    return sorted[0] ?? endSeconds;
   }
 
-  if (markLoopIndex === sorted.length) {
-    return endSeconds ?? 0;
-  }
-
-  return sorted[markLoopIndex] ?? endSeconds ?? 0;
+  return sorted[markLoopIndex] ?? endSeconds;
 }
 
 export function getLoopRange({
@@ -100,19 +84,13 @@ export function getLoopRange({
   markLoopIndex,
   startSeconds,
   endSeconds,
-  duration,
 }: {
   marks: number[];
   markLoopIndex: number | null;
   startSeconds: number;
-  endSeconds?: number;
-  duration: number;
+  endSeconds: number;
 }): { start: number; end: number } | null {
-  if (markLoopIndex === null) {
-    return null;
-  }
-
-  if (markLoopIndex < 0 || markLoopIndex > marks.length) {
+  if (markLoopIndex === null || markLoopIndex > marks.length) {
     return null;
   }
 
@@ -125,7 +103,7 @@ export function getLoopRange({
   const loopEndTime = getLoopEndTime({
     marks,
     markLoopIndex,
-    endSeconds: endSeconds ?? duration,
+    endSeconds,
   });
 
   return {
