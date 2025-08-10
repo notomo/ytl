@@ -1,5 +1,5 @@
 export const getNumber = (v: string | null) => {
-  if (v === null) {
+  if (v === null || v === "") {
     return undefined;
   }
   const n = Number(v);
