@@ -13,9 +13,9 @@ export const RangeSlider = React.memo(function RangeSlider({
   seekTo,
   marks,
   markLoopIndex,
+  isCutStart,
+  isCutEnd,
   className,
-  isCutStart = false,
-  isCutEnd = false,
 }: {
   startSeconds: number;
   endSeconds?: number;
@@ -26,9 +26,9 @@ export const RangeSlider = React.memo(function RangeSlider({
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   marks: number[];
   markLoopIndex: number | null;
+  isCutStart: boolean;
+  isCutEnd: boolean;
   className?: string;
-  isCutStart?: boolean;
-  isCutEnd?: boolean;
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -45,14 +45,14 @@ export const RangeSlider = React.memo(function RangeSlider({
     [setStartSeconds, setEndSeconds],
   );
 
-  const effectiveMin = isCutStart ? startSeconds : 0;
-  const effectiveMax = isCutEnd ? (endSeconds ?? duration) : duration;
+  const min = isCutStart ? startSeconds : 0;
+  const max = isCutEnd ? (endSeconds ?? duration) : duration;
 
   const rangerInstance = useRange({
     getRangerElement: () => ref.current,
     values: [startSeconds, endSeconds ?? duration],
-    min: effectiveMin,
-    max: effectiveMax,
+    min,
+    max,
     stepSize: 1,
     onChange,
   });
@@ -78,20 +78,18 @@ export const RangeSlider = React.memo(function RangeSlider({
   const handleSliderClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const target = e.target as HTMLElement;
-      if (target.tagName === "BUTTON") return;
+      if (target.tagName === "BUTTON") {
+        return;
+      }
 
       const rect = e.currentTarget.getBoundingClientRect();
       const percentage = ((e.clientX - rect.left) / rect.width) * 100;
-      const seconds =
-        (percentage / 100) * (effectiveMax - effectiveMin) + effectiveMin;
-      const clampedSeconds = Math.max(
-        effectiveMin,
-        Math.min(effectiveMax, seconds),
-      );
+      const seconds = (percentage / 100) * (max - min) + min;
+      const clampedSeconds = Math.max(min, Math.min(max, seconds));
 
       seekTo(clampedSeconds, true);
     },
-    [effectiveMin, effectiveMax, seekTo],
+    [min, max, seekTo],
   );
 
   const handleKeyDown = useCallback(
@@ -172,12 +170,11 @@ export const RangeSlider = React.memo(function RangeSlider({
         )}
       <CurrentTimeIndicator
         getCurrentTime={getCurrentTime}
-        duration={duration}
-        effectiveMin={effectiveMin}
-        effectiveMax={effectiveMax}
+        min={min}
+        max={max}
       />
       {marks
-        .filter((mark) => mark >= effectiveMin && mark <= effectiveMax)
+        .filter((mark) => min <= mark && mark <= max)
         .map((mark) => {
           return (
             <div
@@ -196,15 +193,13 @@ export const RangeSlider = React.memo(function RangeSlider({
 });
 
 export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
-  duration,
   getCurrentTime,
-  effectiveMin = 0,
-  effectiveMax,
+  min,
+  max,
 }: {
-  duration: number;
   getCurrentTime: () => number;
-  effectiveMin?: number;
-  effectiveMax?: number;
+  min: number;
+  max: number;
 }) {
   const [currentTime, setCurrentTime] = useState(() => getCurrentTime());
 
@@ -218,17 +213,12 @@ export const CurrentTimeIndicator = React.memo(function CurrentTimeIndicator({
     };
   }, [getCurrentTime]);
 
-  const actualEffectiveMax = effectiveMax ?? duration;
-  const isInRange =
-    currentTime >= effectiveMin && currentTime <= actualEffectiveMax;
-
+  const isInRange = min <= currentTime && currentTime <= max;
   if (!isInRange) {
     return null;
   }
 
-  const percent =
-    ((currentTime - effectiveMin) / (actualEffectiveMax - effectiveMin)) * 100;
-
+  const percent = ((currentTime - min) / (max - min)) * 100;
   return (
     <div
       className="-translate-x-1/2 absolute h-full w-1 bg-green-300"
