@@ -46,7 +46,11 @@ export const SeekToPreviousButton = React.memo(function SeekToPreviousButton({
   const onClick = useCallback(() => {
     pauseVideo();
     const currentTime = getCurrentTime();
-    const targetSeconds = findPreviousMark({ marks, currentTime, fallbackSeconds });
+    const targetSeconds = findPreviousMark({
+      marks,
+      currentTime,
+      fallbackSeconds,
+    });
     seekTo(targetSeconds, true);
   }, [pauseVideo, seekTo, getCurrentTime, marks, fallbackSeconds]);
 
