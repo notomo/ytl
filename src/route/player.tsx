@@ -132,7 +132,7 @@ function PlayerController() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-y-4 px-4">
+    <div className="grid grid-cols-6 gap-y-4 px-4">
       <RangeSlider
         startSeconds={startSeconds}
         endSeconds={endSeconds}
@@ -143,13 +143,16 @@ function PlayerController() {
         seekTo={seekTo}
         marks={marks}
         markLoopIndex={markLoopIndex}
-        className="col-span-3 col-start-1"
+        className="col-span-6 col-start-1"
         isCutStart={isCutStart}
         isCutEnd={isCutEnd}
       />
 
-      <div className="col-span-1 flex items-center gap-2">
+      <div className="col-span-1">
         <VideoUrlInput videoId={videoId} setVideoId={setVideoId} />
+      </div>
+
+      <div className="col-span-1 flex items-center gap-2">
         <AddMarkButton
           getCurrentTime={getCurrentTime}
           marks={marks}
@@ -168,7 +171,7 @@ function PlayerController() {
         />
       </div>
 
-      <div className="col-span-1 col-start-2 flex items-center gap-5 justify-self-center">
+      <div className="col-span-2 flex items-center gap-5 justify-self-center">
         <TimeView
           seconds={startSeconds}
           onToggleCut={() => setIsCutStart(!isCutStart)}
@@ -235,7 +238,7 @@ function PlayerController() {
         />
       </div>
 
-      <div className="col-span-1 flex w-9/12 items-center gap-2 justify-self-end">
+      <div className="col-span-2 flex w-9/12 items-center gap-2 justify-self-end">
         <PlaybackRateSlider
           playbackRate={playbackRate}
           availablePlaybackRates={availablePlaybackRates}
