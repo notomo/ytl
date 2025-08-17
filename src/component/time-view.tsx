@@ -3,6 +3,7 @@ import { Scissors, X } from "lucide-react";
 import React, { useState } from "react";
 import { cn } from "../lib/tailwind";
 import { buttonStyle } from "./button";
+import { formatTime } from "./time";
 
 export const TimeView = React.memo(function TimeView({
   seconds,
@@ -16,11 +17,6 @@ export const TimeView = React.memo(function TimeView({
   cutType: "start" | "end";
 }) {
   const [open, setOpen] = useState(false);
-  const hours = Math.floor(seconds / (60 * 60));
-  const minutes = Math.floor((seconds - hours * 60 * 60) / 60);
-  const restSeconds = seconds - minutes * 60 - hours * 60 * 60;
-  const time = `${hours > 0 ? `${hours}:` : ""}${minutes.toString().padStart(2, "0")}:${restSeconds.toString().padStart(2, "0")}`;
-
   return (
     <div className="w-fit">
       <Popover.Root open={open} onOpenChange={setOpen}>
@@ -31,7 +27,7 @@ export const TimeView = React.memo(function TimeView({
             type="button"
             className="cursor-pointer rounded px-1 underline underline-offset-8 hover:bg-gray-700"
           >
-            {time}
+            {formatTime(seconds)}
           </button>
         </Popover.Trigger>
 
