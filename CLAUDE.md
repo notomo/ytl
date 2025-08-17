@@ -60,6 +60,5 @@ The app directly integrates with YouTube's IFrame API through global window obje
 - Biome for linting and formatting (double quotes, space indentation)
 - TailwindCSS v4 for styling with PostCSS
 - TypeScript with strict configuration including `noUncheckedIndexedAccess`
-- Path aliases configured via `vite-tsconfig-paths` (`~/*` maps to `./src/*`)
 - React 19 with React Router v7 for navigation
 - Frame precision is 1/30 second (stored in `frame` constant)

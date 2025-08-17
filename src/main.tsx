@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
-import { PlayerRoute } from "./route/player";
+import { PlayerRoute } from "./player";
 import "./index.css";
 
 const container = document.getElementById("root");

@@ -1,7 +1,7 @@
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import React, { useCallback } from "react";
-import { iconButtonStyle } from "~/component/button";
-import { findNextMark, findPreviousMark } from "~/component/mark";
+import { iconButtonStyle } from "./button";
+import { findNextMark, findPreviousMark } from "./mark";
 
 export const SeekToNextButton = React.memo(function SeekToNextButton({
   pauseVideo,

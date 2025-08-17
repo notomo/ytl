@@ -1,8 +1,8 @@
 import * as Popover from "@radix-ui/react-popover";
 import { Scissors, X } from "lucide-react";
 import React, { useState } from "react";
-import { buttonStyle } from "~/component/button";
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
+import { buttonStyle } from "./button";
 
 export const TimeView = React.memo(function TimeView({
   seconds,

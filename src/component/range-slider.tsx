@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
 import { getLoopRange } from "./mark";
 import { type RangeInstance, useRange } from "./range";
 

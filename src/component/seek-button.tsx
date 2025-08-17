@@ -1,5 +1,5 @@
 import React from "react";
-import { iconButtonStyle } from "~/component/button";
+import { iconButtonStyle } from "./button";
 
 export const SeekButton = React.memo(function SeekButton({
   pauseVideo,

@@ -1,6 +1,6 @@
 import { Pause, Play } from "lucide-react";
 import React, { useCallback, useMemo } from "react";
-import { iconButtonStyle } from "~/component/button";
+import { iconButtonStyle } from "./button";
 
 export const PlayPauseButton = React.memo(function PlayPauseButton({
   playVideo,

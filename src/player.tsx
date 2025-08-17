@@ -6,26 +6,26 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
-import { Loading } from "~/component/loading";
-import { AddMarkButton, DeleteMarkButton } from "~/component/mark-button";
-import { MarkLoopToggleButton } from "~/component/mark-loop-toggle-button";
-import { PlayPauseButton } from "~/component/play-pause-button";
-import { PlaybackRateSlider } from "~/component/playback-rate-slider";
-import { RangeSlider } from "~/component/range-slider";
-import { SeekButton } from "~/component/seek-button";
+import { Loading } from "./component/loading";
+import { AddMarkButton, DeleteMarkButton } from "./component/mark-button";
+import { MarkLoopToggleButton } from "./component/mark-loop-toggle-button";
+import { PlayPauseButton } from "./component/play-pause-button";
+import { PlaybackRateSlider } from "./component/playback-rate-slider";
+import { RangeSlider } from "./component/range-slider";
+import { SeekButton } from "./component/seek-button";
 import {
   SeekToNextButton,
   SeekToPreviousButton,
-} from "~/component/seek-to-position-button";
-import { SetRangeButton } from "~/component/set-range-button";
-import { TimeView } from "~/component/time-view";
-import { VideoUrlInput } from "~/component/video-url-input";
+} from "./component/seek-to-position-button";
+import { SetRangeButton } from "./component/set-range-button";
+import { TimeView } from "./component/time-view";
+import { VideoUrlInput } from "./component/video-url-input";
 import {
   PlayerStates,
   useYoutubePlayer,
   YoutubePlayerContainer,
-} from "~/component/youtube";
-import { getNumber, getNumbers } from "~/lib/parse";
+} from "./component/youtube";
+import { getNumber, getNumbers } from "./lib/parse";
 
 export function PlayerRoute() {
   return (

@@ -1,4 +1,4 @@
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
 
 const base =
   "bg-background border border-gray-700 rounded-md transition active:bg-gray-700";

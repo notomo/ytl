@@ -1,6 +1,6 @@
 import { RotateCcw } from "lucide-react";
 import React from "react";
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
 import { iconButtonStyle } from "./button";
 import { findNearestSegment } from "./mark";
 

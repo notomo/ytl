@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
 import { type RangeInstance, useRange } from "./range";
 
 export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({

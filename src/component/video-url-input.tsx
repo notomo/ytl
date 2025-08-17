@@ -1,8 +1,8 @@
 import * as Popover from "@radix-ui/react-popover";
 import { ClipboardPaste } from "lucide-react";
 import React, { useState } from "react";
-import { buttonStyle } from "~/component/button";
-import { cn } from "~/lib/tailwind";
+import { cn } from "../lib/tailwind";
+import { buttonStyle } from "./button";
 
 export const VideoUrlInput = React.memo(function VideoUrlInput({
   videoId,
