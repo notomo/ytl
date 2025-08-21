@@ -67,6 +67,11 @@ function PlayerController() {
   const memoizedSetStartSeconds = useCallback(setStartSeconds, []);
   const memoizedSetEndSeconds = useCallback(setEndSeconds, []);
   const memoizedSetPlaybackRate = useCallback(setPlaybackRate, []);
+  const toggleCutStart = useCallback(
+    () => setIsCutStart(!isCutStart),
+    [isCutStart],
+  );
+  const toggleCutEnd = useCallback(() => setIsCutEnd(!isCutEnd), [isCutEnd]);
 
   const arrowLeftToLineIcon = useMemo(() => <ArrowLeftToLine />, []);
   const stepBackIcon = useMemo(() => <StepBack />, []);
@@ -174,7 +179,7 @@ function PlayerController() {
       <div className="col-span-2 flex items-center gap-5 justify-self-center">
         <TimeView
           seconds={startSeconds}
-          onToggleCut={() => setIsCutStart(!isCutStart)}
+          onToggleCut={toggleCutStart}
           isCut={isCutStart}
           cutType="start"
         />
@@ -232,7 +237,7 @@ function PlayerController() {
         </SetRangeButton>
         <TimeView
           seconds={endSeconds ?? duration}
-          onToggleCut={() => setIsCutEnd(!isCutEnd)}
+          onToggleCut={toggleCutEnd}
           isCut={isCutEnd}
           cutType="end"
         />

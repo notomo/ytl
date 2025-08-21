@@ -1,5 +1,5 @@
 import { Pause, Play } from "lucide-react";
-import React, { useCallback, useMemo } from "react";
+import React from "react";
 import { iconButtonStyle } from "./button";
 
 export const PlayPauseButton = React.memo(function PlayPauseButton({
@@ -11,20 +11,19 @@ export const PlayPauseButton = React.memo(function PlayPauseButton({
   pauseVideo: () => void;
   isPaused: boolean;
 }) {
-  const pauseIcon = useMemo(() => <Pause />, []);
-  const playIcon = useMemo(() => <Play />, []);
-
-  const handleClick = useCallback(() => {
-    if (!isPaused) {
-      pauseVideo();
-    } else {
-      playVideo();
-    }
-  }, [isPaused, pauseVideo, playVideo]);
-
   return (
-    <button type="button" className={iconButtonStyle} onClick={handleClick}>
-      {!isPaused ? pauseIcon : playIcon}
+    <button
+      type="button"
+      className={iconButtonStyle}
+      onClick={() => {
+        if (!isPaused) {
+          pauseVideo();
+        } else {
+          playVideo();
+        }
+      }}
+    >
+      {!isPaused ? <Pause /> : <Play />}
     </button>
   );
 });
