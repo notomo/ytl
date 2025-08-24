@@ -15,8 +15,6 @@ export const VideoUrlInput = React.memo(function VideoUrlInput({
   return (
     <div className="w-fit">
       <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Anchor />
-
         <Popover.Trigger asChild>
           <button type="button" className={buttonStyle}>
             {videoId}

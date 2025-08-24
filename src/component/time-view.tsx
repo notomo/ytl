@@ -20,8 +20,6 @@ export const TimeView = React.memo(function TimeView({
   return (
     <div className="w-fit">
       <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Anchor />
-
         <Popover.Trigger asChild>
           <button
             type="button"
