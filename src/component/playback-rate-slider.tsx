@@ -116,7 +116,7 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
           >
             <button
               type="button"
-              className="-top-0.5 -translate-x-1/2 absolute h-3 w-3 rounded-full bg-gray-600"
+              className="absolute -top-0.5 h-3 w-3 -translate-x-1/2 rounded-full bg-gray-600"
               onKeyDown={() => {
                 setPlaybackRate(value);
               }}
@@ -128,7 +128,7 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
             {mainPlaybackRates.has(value) ? (
               <button
                 type="button"
-                className="-translate-x-1/2 absolute translate-y-2/3 cursor-pointer border-none bg-transparent text-inherit"
+                className="absolute -translate-x-1/2 translate-y-2/3 cursor-pointer border-none bg-transparent text-inherit"
                 onMouseDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -174,7 +174,7 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
                   left: `${rangerInstance.getPercentageForValue(value)}%`,
                 }}
                 className={cn(
-                  "-translate-x-1/2 -translate-y-1/2 absolute top-1/2 h-6 w-6 rounded-full border border-green-900 bg-green-700 outline-hidden",
+                  "absolute top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border border-green-900 bg-green-700 outline-hidden",
                   {
                     "z-10": isActive,
                     "z-0": !isActive,
