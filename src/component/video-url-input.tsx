@@ -52,7 +52,11 @@ function EdittingVideoUrlInput({
       onClick={async () => {
         const value = await navigator.clipboard.readText();
         const url = new URL(value);
-        setVideoId(url.searchParams.get("v") ?? videoId);
+        const id =
+          url.hostname === "youtu.be"
+            ? url.pathname.slice(1)
+            : url.searchParams.get("v");
+        setVideoId(id ?? videoId);
       }}
     >
       <ClipboardPaste />
