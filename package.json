@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {},
   "dependencies": {
-    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-popover": "^1.1.16",
     "clsx": "^2.1.1",
     "lucide-react": "^1.17.0",
     "react": "^19.2.7",
