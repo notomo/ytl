@@ -98,7 +98,7 @@ export const PlaybackRateSlider = React.memo(function PlaybackRateSlider({
       aria-valuenow={playbackRate}
       aria-label="Playback rate slider"
       className={cn(
-        "relative w-full cursor-pointer select-none pt-2 pb-6",
+        "relative w-full cursor-pointer pt-2 pb-6 select-none",
         className,
       )}
     >

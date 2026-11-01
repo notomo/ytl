@@ -112,7 +112,7 @@ export const RangeSlider = React.memo(function RangeSlider({
       role="button"
       tabIndex={0}
       className={cn(
-        "relative h-4 cursor-pointer select-none rounded-md bg-gray-700",
+        "relative h-4 cursor-pointer rounded-md bg-gray-700 select-none",
         className,
       )}
     >

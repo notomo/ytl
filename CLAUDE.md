@@ -5,7 +5,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 This project uses Make for task management:
-
 - `make lint` - Run Biome linting and formatting checks
 - `make format` - Format code with Biome (fixes issues automatically)
 - `make build` - Build the project (TypeScript compilation + Vite build)
@@ -36,7 +35,7 @@ This project uses Make for task management:
 The application uses URL search parameters for persistent state:
 - `v` - YouTube video ID
 - `start` - Start time in seconds
-- `end` - End time in seconds  
+- `end` - End time in seconds
 - `rate` - Playback rate
 - `marks` - Comma-separated list of mark positions
 - `markLoopIndex` - Index of currently active mark loop
