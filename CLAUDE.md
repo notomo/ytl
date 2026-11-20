@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 This project uses Make for task management:
+
 - `make lint` - Run Biome linting and formatting checks
 - `make format` - Format code with Biome (fixes issues automatically)
 - `make build` - Build the project (TypeScript compilation + Vite build)
@@ -15,6 +16,7 @@ This project uses Make for task management:
 ## Architecture
 
 **YTL** is a React-based YouTube video player with range selection capabilities. The application allows users to:
+
 - Load YouTube videos by URL or video ID
 - Set start and end time ranges for playback loops
 - Control playback rate with available rates from YouTube
@@ -33,6 +35,7 @@ This project uses Make for task management:
 ### State Management
 
 The application uses URL search parameters for persistent state:
+
 - `v` - YouTube video ID
 - `start` - Start time in seconds
 - `end` - End time in seconds
